@@ -1,0 +1,40 @@
+# dependencies
+node_modules/
+
+# build
+.next/
+out/
+dist/
+.turbo/
+
+# env files
+.env
+.env*.local
+
+# vercel
+.vercel/
+
+# IDE
+.vscode/
+!.vscode/extensions.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# debug
+npm-debug.log*
+pnpm-debug.log*
+
+# assets - large binary files (tracked separately)
+assets/CUADROS SOFI MOSQUERA/
+assets/PAG WEB/PORTFOLIO/
+assets/Entregables/
+assets/*.ai
+assets/*.psd
+assets/*.pptx
+assets/*.pdf
+assets/*.zip
+assets/*.MOV
+assets/*.HEIC

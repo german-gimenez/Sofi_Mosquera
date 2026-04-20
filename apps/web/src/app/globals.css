@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand DNA color palette */
+  --color-brand-negro: #111111;
+  --color-brand-negro-suave: #1A1A1A;
+  --color-brand-gris-nav: #B5B0A8;
+  --color-brand-gris-border: #D5D1CA;
+  --color-brand-crema: #EAE7E0;
+  --color-brand-blanco-calido: #F5F3EE;
+
+  /* Semantic aliases */
+  --color-background: #F5F3EE;
+  --color-foreground: #111111;
+
+  /* Font families */
+  --font-heading: "Instrument Serif", serif;
+  --font-body: "Jost", sans-serif;
+
+  /* Border radius */
+  --radius-card: 12px;
+  --radius-image: 16px;
+  --radius-pill: 500px;
+
+  /* Marquee animation */
+  --animate-marquee: marquee linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.33%);
+  }
+}
+
+/* Base styles following Brand DNA */
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Selection color matching brand */
+::selection {
+  background-color: #EAE7E0;
+  color: #111111;
+}

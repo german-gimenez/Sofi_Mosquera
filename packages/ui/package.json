@@ -1,0 +1,23 @@
+{
+  "name": "@sofi/ui",
+  "private": true,
+  "version": "0.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "echo '@sofi/ui: transpiled by consuming app'",
+    "lint": "echo '@sofi/ui: lint via consuming app'"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7",
+    "clsx": "^2",
+    "tailwind-merge": "^3"
+  },
+  "devDependencies": {
+    "react": "^19",
+    "@types/react": "^19"
+  },
+  "peerDependencies": {
+    "react": "^19"
+  }
+}

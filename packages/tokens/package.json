@@ -1,0 +1,11 @@
+{
+  "name": "@sofi/tokens",
+  "private": true,
+  "version": "0.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "echo 'tokens: nothing to build'",
+    "lint": "echo 'tokens: nothing to lint'"
+  }
+}

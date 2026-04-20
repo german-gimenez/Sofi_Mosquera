@@ -1,0 +1,5 @@
+{
+  "extends": "@sofi/config/tsconfig/library.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

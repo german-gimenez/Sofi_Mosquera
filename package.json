@@ -1,0 +1,19 @@
+{
+  "name": "sofi-mosquera",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "db:push": "turbo db:push --filter=@sofi/db",
+    "db:seed": "turbo db:seed --filter=@sofi/db",
+    "clean": "turbo clean"
+  },
+  "devDependencies": {
+    "turbo": "^2"
+  },
+  "packageManager": "pnpm@10.18.3",
+  "engines": {
+    "node": ">=22"
+  }
+}

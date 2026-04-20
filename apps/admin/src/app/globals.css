@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-negro: #111111;
+  --color-brand-negro-suave: #1A1A1A;
+  --color-brand-gris-nav: #B5B0A8;
+  --color-brand-gris-border: #D5D1CA;
+  --color-brand-crema: #EAE7E0;
+  --color-brand-blanco-calido: #F5F3EE;
+  --color-background: #F5F3EE;
+  --color-foreground: #111111;
+  --font-body: "Jost", sans-serif;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  font-weight: 300;
+}
