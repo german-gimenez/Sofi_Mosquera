@@ -38,3 +38,4 @@ assets/*.pdf
 assets/*.zip
 assets/*.MOV
 assets/*.HEIC
+.vercel
