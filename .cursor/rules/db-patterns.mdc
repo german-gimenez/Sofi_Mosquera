@@ -1,0 +1,25 @@
+---
+description: Database patterns for Neon + Drizzle. Apply when editing DB-related files.
+globs: packages/db/**/*.ts,apps/**/page.tsx
+alwaysApply: false
+---
+
+# Database Patterns
+
+## Drizzle + Neon
+- Use `createDb()` from `@sofi/db` — it handles connection setup
+- Use `{ client: sql, schema }` syntax for Drizzle (neon-http driver v1)
+- For seeds/migrations, use tagged template: `sql\`SELECT ...\`` (not function calls)
+
+## Dynamic pages
+- All pages that query the DB MUST have `export const dynamic = "force-dynamic"`
+- This prevents build-time errors when DATABASE_URL is not available
+
+## Schema
+- 5 tables: projects, artworks, furniture, inquiries, settings
+- All content tables have: id, slug (unique), title, coverUrl, gallery (jsonb), featured, publishedAt, createdAt, updatedAt
+- Settings uses key-value pattern with jsonb value column
+
+## Image URLs
+- Store Vercel Blob URLs in coverUrl and gallery fields
+- Gallery is `jsonb` typed as `string[]`

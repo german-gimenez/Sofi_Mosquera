@@ -1,19 +1,25 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 
 export function HeroParallax() {
   const ref = useRef<HTMLDivElement>(null);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const scale = useTransform(scrollYProgress, [0, 1], reducedMotion ? [1, 1] : [1, 1.15]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], reducedMotion ? [1, 1] : [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], reducedMotion ? [0, 0] : [0, 100]);
 
   return (
     <section

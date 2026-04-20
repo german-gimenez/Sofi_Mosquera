@@ -15,5 +15,9 @@
   "packageManager": "pnpm@10.18.3",
   "engines": {
     "node": ">=22"
+  },
+  "dependencies": {
+    "@vercel/blob": "^1.1.1",
+    "tsx": "^4.21.0"
   }
 }

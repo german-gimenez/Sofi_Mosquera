@@ -69,7 +69,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-brand-blanco-calido/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-body text-xs text-brand-gris-nav/50">
             &copy; {new Date().getFullYear()} Sofia Mosquera. Todos los derechos reservados.
           </p>

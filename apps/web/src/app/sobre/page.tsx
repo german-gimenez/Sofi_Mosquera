@@ -68,7 +68,7 @@ export default function SobrePage() {
                 nacen de la misma visión.
               </p>
             </div>
-            <div className="bg-[#2A2A2A] p-10">
+            <div className="bg-brand-negro-suave p-10">
               <span className="font-heading text-5xl text-brand-blanco-calido/10">W</span>
               <span className="font-body text-[9px] tracking-[0.35em] uppercase text-brand-gris-nav/50 block mt-4 mb-3">
                 Qué ofrecemos

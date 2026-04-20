@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { SectionReveal, Marquee, WhatsAppCTA } from "@sofi/ui";
 import { HeroParallax } from "@/components/hero-parallax";
 

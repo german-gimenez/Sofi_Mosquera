@@ -1,0 +1,32 @@
+---
+description: Brand DNA rules for Sofia Mosquera. Apply to ALL files in apps/ and packages/ui.
+globs: apps/**/*.tsx,apps/**/*.css,packages/ui/**/*.tsx
+alwaysApply: false
+---
+
+# Brand DNA — Sofia Mosquera
+
+## Colors (NEVER deviate)
+- Background: `#F5F3EE` (blanco calido) — NEVER `#FFFFFF`
+- Text: `#111111` (negro base) — NEVER `#000000`
+- Body text: `#1A1A1A` (negro suave)
+- Navigation/muted: `#B5B0A8` (gris nav)
+- Card backgrounds: `#EAE7E0` (crema)
+- Borders: `#D5D1CA` (gris border)
+
+## Typography
+- Headings: `font-heading` (Instrument Serif) — weight 400, NEVER bold
+- Body: `font-body` (Jost) — weights 200, 300, 400
+- Label/metadata: `font-body` with `text-[9px]-[10px] tracking-[0.3em] uppercase`
+
+## Components
+- Use `@sofi/ui` components (Button, WhatsAppCTA, SectionReveal, Marquee)
+- Images: always `next/image` with `fill` + `sizes`, never raw `<img>`
+- Motion: always check `prefers-reduced-motion`
+- WhatsApp CTA: phone +5492615456913, use pre-crafted messages
+
+## Vocabulary
+- Use "interiorismo" not "decoración"
+- Use "espacio" not "casa linda"
+- Never use "barato", "económico", "oferta"
+- CTA style: "Coordiná tu asesoría", "Consultá tu proyecto"

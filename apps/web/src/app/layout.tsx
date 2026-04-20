@@ -51,8 +51,11 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${instrumentSerif.variable} ${jost.variable}`}>
       <body className="antialiased">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand-negro focus:text-brand-blanco-calido focus:px-4 focus:py-2 focus:rounded-[8px]">
+          Ir al contenido principal
+        </a>
         <Nav />
-        <main>{children}</main>
+        <main id="main-content">{children}</main>
         <Footer />
         <WhatsAppCTA variant="floating" />
       </body>

@@ -46,6 +46,7 @@ export function Nav() {
               className="md:hidden p-1"
               onClick={() => setOpen(!open)}
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
             >
               <div className="w-5 flex flex-col gap-1">
                 <span

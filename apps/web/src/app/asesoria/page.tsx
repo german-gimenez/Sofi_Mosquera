@@ -1,4 +1,4 @@
-import { SectionReveal, WhatsAppCTA, Marquee } from "@sofi/ui";
+import { SectionReveal, WhatsAppCTA } from "@sofi/ui";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

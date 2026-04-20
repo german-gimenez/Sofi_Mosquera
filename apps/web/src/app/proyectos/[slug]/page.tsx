@@ -116,7 +116,7 @@ export default async function ProjectPage({ params }: Props) {
 
         <div className="mt-16 pt-8 border-t border-brand-crema text-center">
           <Link
-            href="/interiorismo"
+            href="/proyectos"
             className="font-body text-sm text-brand-gris-nav border-b border-brand-gris-nav pb-0.5 hover:text-brand-negro hover:border-brand-negro transition-colors"
           >
             &larr; Ver todos los proyectos

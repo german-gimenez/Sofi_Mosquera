@@ -13,9 +13,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/interiorismo",
-        destination: "/proyectos",
-        permanent: false,
+        source: "/cuadros",
+        destination: "/arte",
+        permanent: true,
       },
     ];
   },
