@@ -1,165 +1,231 @@
 /**
- * Bulk image uploader to Vercel Blob.
- * Catalogues and uploads project/artwork images, then updates DB records.
+ * Bulk image uploader to Cloudinary.
+ * Catalogues and uploads project/artwork/about images to folder `sofi-mosquera/`,
+ * then updates DB records (projects.cover_url + gallery, artworks.cover_url, settings).
  *
- * Usage: BLOB_READ_WRITE_TOKEN=vercel_blob_... tsx scripts/upload-images.ts
+ * Usage: pnpm --filter web... exec tsx scripts/upload-images.ts
+ *   (runs from repo root; reads .env.local automatically)
  */
 import { config } from "dotenv";
-import { resolve, basename, extname } from "path";
-import { readdir, readFile, stat } from "fs/promises";
-import { put } from "@vercel/blob";
+import { resolve, extname } from "path";
+import { readdir, stat } from "fs/promises";
+import { v2 as cloudinary } from "cloudinary";
 import { neon } from "@neondatabase/serverless";
 
 config({ path: resolve(__dirname, "../.env.local") });
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
+
 const ASSETS_ROOT = resolve(__dirname, "../assets");
+const NAMESPACE = "sofi-mosquera";
+const MAX_FILE_MB = 20;
+const MAX_IMAGES_PER_PROJECT = 8;
 
-interface ImageMapping {
+const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".heic"]);
+const isImage = (f: string) => IMAGE_EXT.has(extname(f).toLowerCase());
+
+interface ProjectMap {
   folder: string;
-  dbTable: "projects" | "artworks";
   slug: string;
-  isCover?: boolean;
 }
 
-const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
-
-function isImage(filename: string): boolean {
-  return IMAGE_EXTENSIONS.has(extname(filename).toLowerCase());
+interface ArtworkMap {
+  file: string;
+  slug: string;
 }
 
-const PROJECT_MAPPINGS: ImageMapping[] = [
-  { folder: "PAG WEB/PORTFOLIO/CASA SUSEL", dbTable: "projects", slug: "casa-susel" },
-  { folder: "PAG WEB/PORTFOLIO/PENTHOUSE", dbTable: "projects", slug: "penthouse" },
-  { folder: "PAG WEB/PORTFOLIO/BERTONA FERREYRA", dbTable: "projects", slug: "bertona-ferreyra" },
-  { folder: "PAG WEB/PORTFOLIO/CLUB HOUSE RINCON VIAMONTE", dbTable: "projects", slug: "club-house-rincon-viamonte" },
-  { folder: "PAG WEB/PORTFOLIO/ANDELUNA", dbTable: "projects", slug: "andeluna" },
-  { folder: "PAG WEB/PORTFOLIO/PRODUCCION CASA LAURA Y LUCAS", dbTable: "projects", slug: "produccion-casa-laura-y-lucas" },
-  { folder: "PAG WEB/PORTFOLIO/ROSARIO GONZALEZ", dbTable: "projects", slug: "rosario-gonzalez" },
-  { folder: "PAG WEB/PORTFOLIO/PROD FOTOS ESTUDIO", dbTable: "projects", slug: "prod-fotos-estudio" },
+const PROJECTS: ProjectMap[] = [
+  { folder: "PAG WEB/PORTFOLIO/CASA SUSEL", slug: "casa-susel" },
+  { folder: "PAG WEB/PORTFOLIO/PENTHOUSE", slug: "penthouse" },
+  { folder: "PAG WEB/PORTFOLIO/BERTONA FERREYRA", slug: "bertona-ferreyra" },
+  { folder: "PAG WEB/PORTFOLIO/CLUB HOUSE RINCON VIAMONTE", slug: "club-house-rincon-viamonte" },
+  { folder: "PAG WEB/PORTFOLIO/ANDELUNA", slug: "andeluna" },
+  { folder: "PAG WEB/PORTFOLIO/PRODUCCION CASA LAURA Y LUCAS", slug: "produccion-casa-laura-y-lucas" },
+  { folder: "PAG WEB/PORTFOLIO/ROSARIO GONZALEZ", slug: "rosario-gonzalez" },
+  { folder: "PAG WEB/PORTFOLIO/PROD FOTOS ESTUDIO", slug: "prod-fotos-estudio" },
 ];
 
-const ARTWORK_MAPPINGS: ImageMapping[] = [
-  { folder: "CUADROS SOFI MOSQUERA/EL REY.JPG", dbTable: "artworks", slug: "el-rey", isCover: true },
-  { folder: "CUADROS SOFI MOSQUERA/ISLA GRIS.png", dbTable: "artworks", slug: "isla-gris", isCover: true },
-  { folder: "CUADROS SOFI MOSQUERA/MOUNTAINS.jpg", dbTable: "artworks", slug: "mountains", isCover: true },
-  { folder: "CUADROS SOFI MOSQUERA/NACIMIENTO.jpg", dbTable: "artworks", slug: "nacimiento", isCover: true },
-  { folder: "CUADROS SOFI MOSQUERA/MURI.jpg", dbTable: "artworks", slug: "muri", isCover: true },
-  { folder: "CUADROS SOFI MOSQUERA/MUSICA.png", dbTable: "artworks", slug: "musica", isCover: true },
-  { folder: "CUADROS SOFI MOSQUERA/INTERCAMBIO.jpg", dbTable: "artworks", slug: "intercambio", isCover: true },
+const ARTWORKS: ArtworkMap[] = [
+  { file: "CUADROS SOFI MOSQUERA/EL REY.JPG", slug: "el-rey" },
+  { file: "CUADROS SOFI MOSQUERA/ISLA GRIS.png", slug: "isla-gris" },
+  { file: "CUADROS SOFI MOSQUERA/MOUNTAINS.jpg", slug: "mountains" },
+  { file: "CUADROS SOFI MOSQUERA/NACIMIENTO.jpg", slug: "nacimiento" },
+  { file: "CUADROS SOFI MOSQUERA/MURI.jpg", slug: "muri" },
+  { file: "CUADROS SOFI MOSQUERA/MUSICA.png", slug: "musica" },
+  { file: "CUADROS SOFI MOSQUERA/INTERCAMBIO.jpg", slug: "intercambio" },
+  { file: "CUADROS SOFI MOSQUERA/Tr\u00edptico Mapa.jpg", slug: "triptico-mapa" },
+  { file: "CUADROS SOFI MOSQUERA/NACIMIENTO (1).jpg", slug: "nacimiento-2" },
+  { file: "CUADROS SOFI MOSQUERA/MUSIC.png", slug: "music" },
 ];
 
-async function uploadFile(filePath: string, blobPath: string): Promise<string> {
-  const file = await readFile(filePath);
-  const { url } = await put(blobPath, file, {
-    access: "public",
-    addRandomSuffix: false,
+async function uploadFile(filePath: string, publicId: string): Promise<string> {
+  const result = await cloudinary.uploader.upload(filePath, {
+    public_id: publicId,
+    overwrite: true,
+    resource_type: "image",
+    eager: [{ width: 2400, crop: "limit", quality: "auto:good" }],
+    eager_async: false,
   });
-  return url;
+  return result.public_id;
 }
 
-async function uploadProjectImages(): Promise<void> {
+async function uploadProjects() {
   const sql = neon(process.env.DATABASE_URL_UNPOOLED!);
 
-  for (const mapping of PROJECT_MAPPINGS) {
-    const folderPath = resolve(ASSETS_ROOT, mapping.folder);
+  for (const p of PROJECTS) {
+    const folderPath = resolve(ASSETS_ROOT, p.folder);
 
+    let dirStat;
     try {
-      const dirStat = await stat(folderPath);
-      if (!dirStat.isDirectory()) continue;
+      dirStat = await stat(folderPath);
     } catch {
-      console.log(`  Skip (not found): ${mapping.folder}`);
+      console.log(`  SKIP (missing): ${p.slug}`);
+      continue;
+    }
+    if (!dirStat.isDirectory()) continue;
+
+    const files = (await readdir(folderPath))
+      .filter(isImage)
+      .sort()
+      .slice(0, MAX_IMAGES_PER_PROJECT);
+
+    if (!files.length) {
+      console.log(`  SKIP (no images): ${p.slug}`);
       continue;
     }
 
-    const files = await readdir(folderPath);
-    const images = files.filter(isImage).sort().slice(0, 8);
+    console.log(`\n>> Uploading ${p.slug} (${files.length} images)`);
+    const publicIds: string[] = [];
 
-    if (images.length === 0) {
-      console.log(`  Skip (no images): ${mapping.folder}`);
-      continue;
-    }
-
-    console.log(`\nUploading ${mapping.slug} (${images.length} images)...`);
-
-    const urls: string[] = [];
-    for (let i = 0; i < images.length; i++) {
-      const img = images[i];
-      const ext = extname(img).toLowerCase();
-      const blobPath = `projects/${mapping.slug}/${String(i + 1).padStart(2, "0")}${ext}`;
+    for (let i = 0; i < files.length; i++) {
+      const img = files[i];
       const filePath = resolve(folderPath, img);
-
+      const fInfo = await stat(filePath);
+      if (fInfo.size > MAX_FILE_MB * 1024 * 1024) {
+        console.log(`   skip big file: ${img}`);
+        continue;
+      }
+      const idx = String(i + 1).padStart(2, "0");
+      const publicId = `${NAMESPACE}/projects/${p.slug}/${idx}`;
       try {
-        const fileInfo = await stat(filePath);
-        if (fileInfo.size > 10 * 1024 * 1024) {
-          console.log(`  Skip (>10MB): ${img}`);
-          continue;
-        }
-
-        const url = await uploadFile(filePath, blobPath);
-        urls.push(url);
-        console.log(`  ✓ ${img} -> ${blobPath}`);
-      } catch (err: any) {
-        console.log(`  ✗ ${img}: ${err.message}`);
+        const uploaded = await uploadFile(filePath, publicId);
+        publicIds.push(uploaded);
+        console.log(`   OK  ${img} -> ${uploaded}`);
+      } catch (err) {
+        console.log(`   ERR ${img}: ${(err as Error).message}`);
       }
     }
 
-    if (urls.length > 0) {
-      const coverUrl = urls[0];
-      const gallery = JSON.stringify(urls);
-      await sql`UPDATE projects SET cover_url = ${coverUrl}, gallery = ${gallery}::jsonb WHERE slug = ${mapping.slug}`;
-      console.log(`  DB updated: cover + ${urls.length} gallery images`);
+    if (publicIds.length > 0) {
+      const cover = publicIds[0];
+      const gallery = JSON.stringify(publicIds);
+      await sql`UPDATE projects SET cover_url = ${cover}, gallery = ${gallery}::jsonb WHERE slug = ${p.slug}`;
+      console.log(`   DB: cover + ${publicIds.length} gallery`);
     }
   }
 }
 
-async function uploadArtworkImages(): Promise<void> {
+async function uploadArtworks() {
   const sql = neon(process.env.DATABASE_URL_UNPOOLED!);
 
-  for (const mapping of ARTWORK_MAPPINGS) {
-    const filePath = resolve(ASSETS_ROOT, mapping.folder);
-
+  for (const a of ARTWORKS) {
+    const filePath = resolve(ASSETS_ROOT, a.file);
     try {
       await stat(filePath);
     } catch {
-      console.log(`  Skip (not found): ${mapping.folder}`);
+      console.log(`  SKIP (missing): ${a.slug}`);
       continue;
     }
 
-    const ext = extname(filePath).toLowerCase();
-    const blobPath = `artworks/${mapping.slug}/cover${ext}`;
-
-    console.log(`Uploading artwork: ${mapping.slug}...`);
-
-    try {
-      const fileInfo = await stat(filePath);
-      if (fileInfo.size > 10 * 1024 * 1024) {
-        console.log(`  Skip (>10MB): ${mapping.folder}`);
-        continue;
-      }
-
-      const url = await uploadFile(filePath, blobPath);
-      await sql`UPDATE artworks SET cover_url = ${url} WHERE slug = ${mapping.slug}`;
-      console.log(`  ✓ ${mapping.slug} -> ${url}`);
-    } catch (err: any) {
-      console.log(`  ✗ ${mapping.slug}: ${err.message}`);
+    const fInfo = await stat(filePath);
+    if (fInfo.size > MAX_FILE_MB * 1024 * 1024) {
+      console.log(`  SKIP big: ${a.slug}`);
+      continue;
     }
+
+    const publicId = `${NAMESPACE}/artworks/${a.slug}/cover`;
+    console.log(`\n>> ${a.slug}`);
+    try {
+      const uploaded = await uploadFile(filePath, publicId);
+      await sql`UPDATE artworks SET cover_url = ${uploaded} WHERE slug = ${a.slug}`;
+      console.log(`   OK -> ${uploaded}`);
+    } catch (err) {
+      console.log(`   ERR: ${(err as Error).message}`);
+    }
+  }
+}
+
+async function uploadAbout() {
+  const folderPath = resolve(ASSETS_ROOT, "CUADROS SOFI MOSQUERA/YO PINTANDO");
+  try {
+    await stat(folderPath);
+  } catch {
+    console.log("  SKIP about folder");
+    return;
+  }
+
+  const files = (await readdir(folderPath))
+    .filter(isImage)
+    .sort()
+    .slice(0, 3);
+
+  if (!files.length) return;
+
+  console.log("\n>> About images");
+  const publicIds: string[] = [];
+  for (let i = 0; i < files.length; i++) {
+    const filePath = resolve(folderPath, files[i]);
+    const fInfo = await stat(filePath);
+    if (fInfo.size > MAX_FILE_MB * 1024 * 1024) continue;
+    const publicId = `${NAMESPACE}/about/sofia-${String(i + 1).padStart(2, "0")}`;
+    try {
+      const uploaded = await uploadFile(filePath, publicId);
+      publicIds.push(uploaded);
+      console.log(`   OK ${files[i]} -> ${uploaded}`);
+    } catch (err) {
+      console.log(`   ERR ${files[i]}: ${(err as Error).message}`);
+    }
+  }
+
+  if (publicIds.length > 0) {
+    const sql = neon(process.env.DATABASE_URL_UNPOOLED!);
+    const photos = JSON.stringify(publicIds);
+    await sql`INSERT INTO settings (key, value, updated_at) VALUES ('about_photos', ${photos}::jsonb, NOW()) ON CONFLICT (key) DO UPDATE SET value = ${photos}::jsonb, updated_at = NOW()`;
+    console.log(`   DB: ${publicIds.length} photos saved to settings.about_photos`);
   }
 }
 
 async function main() {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    console.error("ERROR: BLOB_READ_WRITE_TOKEN is required.");
-    console.error("Get it from Vercel Dashboard > Storage > Blob > Connect > Token");
+  if (!process.env.CLOUDINARY_CLOUD_NAME) {
+    console.error("Missing CLOUDINARY_CLOUD_NAME in .env.local");
+    process.exit(1);
+  }
+  if (!process.env.DATABASE_URL_UNPOOLED) {
+    console.error("Missing DATABASE_URL_UNPOOLED in .env.local");
     process.exit(1);
   }
 
-  console.log("=== Uploading Project Images ===");
-  await uploadProjectImages();
+  console.log(`Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME}`);
+  console.log(`Namespace: ${NAMESPACE}/\n`);
 
-  console.log("\n=== Uploading Artwork Images ===");
-  await uploadArtworkImages();
+  console.log("=== PROJECTS ===");
+  await uploadProjects();
 
-  console.log("\n=== Done! ===");
+  console.log("\n=== ARTWORKS ===");
+  await uploadArtworks();
+
+  console.log("\n=== ABOUT ===");
+  await uploadAbout();
+
+  console.log("\nDone.");
 }
 
-main().catch(console.error);
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

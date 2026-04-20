@@ -3,20 +3,61 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contacto",
-  description: "Contactá a Sofia Mosquera. Interiorismo, arte y muebles a medida en Mendoza, Argentina.",
+  description:
+    "Contacta a Sofia Mosquera. Interiorismo, arte y muebles a medida en Mendoza, Argentina.",
 };
 
 const contactInfo = [
-  { label: "WhatsApp", value: "+54 9 261 545 6913", href: "https://wa.me/5492615456913" },
-  { label: "Instagram Interiorismo", value: "@sofiamosquera.interiorismo", href: "https://instagram.com/sofiamosquera.interiorismo" },
-  { label: "Instagram Arte", value: "@sofiamosquera.arte", href: "https://instagram.com/sofiamosquera.arte" },
-  { label: "Ubicación", value: "Mendoza, Argentina", href: null },
+  {
+    label: "WhatsApp",
+    value: "+54 9 261 545 6913",
+    href: "https://wa.me/5492615456913",
+  },
+  {
+    label: "Instagram Interiorismo",
+    value: "@sofiamosquera.interiorismo",
+    href: "https://instagram.com/sofiamosquera.interiorismo",
+  },
+  {
+    label: "Instagram Arte",
+    value: "@sofiamosquera.arte",
+    href: "https://instagram.com/sofiamosquera.arte",
+  },
+  {
+    label: "Ubicacion",
+    value: "Mendoza, Argentina",
+    href: null,
+  },
+  {
+    label: "Horarios",
+    value: "Lunes a viernes \u00b7 09:00 a 18:00",
+    href: null,
+  },
+];
+
+const faqs = [
+  {
+    q: "Trabajan fuera de Mendoza?",
+    a: "Si. Hemos realizado proyectos en todo el pais y en Chile. Coordinamos visitas presenciales o trabajamos con renders y videollamadas.",
+  },
+  {
+    q: "Cuanto dura un proyecto integral?",
+    a: "Entre 3 y 8 meses dependiendo del alcance. Empezamos con una asesoria inicial donde definimos tiempos concretos para tu proyecto.",
+  },
+  {
+    q: "Puedo comprar solo una obra de arte o un mueble?",
+    a: "Por supuesto. Las obras estan disponibles via WhatsApp y los muebles se fabrican a medida segun especificacion. Coordinamos envio a cualquier parte del pais.",
+  },
+  {
+    q: "Como es el proceso de una asesoria?",
+    a: "Primero conversamos por WhatsApp para entender tu espacio y tus necesidades. Luego coordinamos una visita presencial o virtual, y te entregamos una propuesta concreta.",
+  },
 ];
 
 export default function ContactoPage() {
   return (
     <div className="pt-28">
-      <section className="max-w-7xl mx-auto px-6 pb-24">
+      <section className="max-w-7xl mx-auto px-6 pb-16">
         <SectionReveal>
           <div className="grid md:grid-cols-2 gap-16">
             <div>
@@ -29,15 +70,15 @@ export default function ContactoPage() {
                 tu proyecto
               </h1>
               <p className="font-body font-light text-brand-negro-suave mt-6 leading-relaxed">
-                Si tenés un espacio que todavía no te representa — una casa, una
-                oficina, un local — coordinamos una asesoría y empezamos a
-                diseñar tu esencia.
+                Si tenes un espacio que todavia no te representa \u2014 una casa, una
+                oficina, un local \u2014 coordinamos una asesoria y empezamos a
+                disen\u0303ar tu esencia.
               </p>
 
               <div className="mt-10">
                 <WhatsAppCTA
                   label="Escribinos por WhatsApp"
-                  message="Hola Sofia, me gustaría consultar sobre un proyecto."
+                  message="Hola Sofia, me gustaria consultar sobre un proyecto."
                 />
               </div>
             </div>
@@ -70,6 +111,36 @@ export default function ContactoPage() {
             </div>
           </div>
         </SectionReveal>
+      </section>
+
+      {/* FAQ */}
+      <section className="max-w-4xl mx-auto px-6 pb-24">
+        <SectionReveal>
+          <div className="flex items-center gap-5 mb-12">
+            <span className="font-body text-[10px] tracking-[0.3em] uppercase text-brand-gris-nav">
+              Preguntas frecuentes
+            </span>
+            <div className="flex-1 h-px bg-brand-crema" />
+          </div>
+        </SectionReveal>
+
+        <div className="space-y-0">
+          {faqs.map((faq, i) => (
+            <SectionReveal key={i} delay={i * 60}>
+              <details className="group border-b border-brand-crema py-6 cursor-pointer">
+                <summary className="flex justify-between items-center font-heading text-lg text-brand-negro marker:hidden list-none">
+                  {faq.q}
+                  <span className="font-body text-2xl text-brand-gris-nav transition-transform group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="font-body font-light text-brand-negro-suave mt-4 leading-relaxed">
+                  {faq.a}
+                </p>
+              </details>
+            </SectionReveal>
+          ))}
+        </div>
       </section>
     </div>
   );

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SectionReveal } from "@sofi/ui";
+import { SectionReveal, cldArtwork } from "@sofi/ui";
 import { createDb, artworks, desc } from "@sofi/db";
 import { ArtworkTilt } from "@/components/artwork-tilt";
 import type { Metadata } from "next";
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Arte",
   description:
-    "Cuadros y obras de arte originales de Sofia Mosquera. Piezas únicas que transforman espacios.",
+    "Cuadros y obras de arte originales de Sofia Mosquera. Piezas unicas que transforman espacios.",
 };
 
 export default async function ArtePage() {
@@ -18,24 +18,46 @@ export default async function ArtePage() {
   const allArtworks = await db
     .select()
     .from(artworks)
-    .orderBy(desc(artworks.publishedAt));
+    .orderBy(desc(artworks.featured), desc(artworks.publishedAt));
+
+  const series = Array.from(new Set(allArtworks.map((a) => a.series).filter(Boolean))) as string[];
 
   return (
     <div className="pt-28">
-      <section className="max-w-7xl mx-auto px-6 pb-16">
+      <section className="max-w-7xl mx-auto px-6 pb-12">
         <SectionReveal>
           <span className="font-body text-[10px] font-medium tracking-[0.35em] uppercase text-brand-gris-nav">
-            Galería
+            Galeria
           </span>
           <h1 className="font-heading text-5xl md:text-6xl mt-4 text-brand-negro">
             Arte Original
           </h1>
           <p className="font-body font-light text-brand-negro-suave mt-4 max-w-2xl text-lg leading-relaxed">
-            Cada pieza nace de la misma sensibilidad con la que diseñamos
-            espacios. Arte que no decora — transforma.
+            Cada pieza nace de la misma sensibilidad con la que disen\u0303amos
+            espacios. Arte que no decora \u2014 transforma.
           </p>
         </SectionReveal>
       </section>
+
+      {series.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 pb-12">
+          <SectionReveal>
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="font-body text-[9px] tracking-[0.3em] uppercase text-brand-gris-nav mr-3">
+                Series disponibles:
+              </span>
+              {series.map((s) => (
+                <span
+                  key={s}
+                  className="font-body text-xs px-3 py-1 bg-brand-crema rounded-pill text-brand-negro"
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+          </SectionReveal>
+        </section>
+      )}
 
       <section className="max-w-7xl mx-auto px-6 pb-24">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -46,12 +68,17 @@ export default async function ArtePage() {
                   <div className="aspect-[3/4] bg-brand-crema rounded-image overflow-hidden">
                     {artwork.coverUrl ? (
                       <img
-                        src={artwork.coverUrl}
+                        src={cldArtwork(artwork.coverUrl)}
                         alt={artwork.title}
                         className="w-full h-full object-cover"
+                        loading={i < 3 ? "eager" : "lazy"}
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
+                      <div
+                        className="w-full h-full flex items-center justify-center"
+                        role="img"
+                        aria-label={artwork.title}
+                      >
                         <span className="font-heading text-5xl text-brand-gris-border/40">
                           {artwork.title.charAt(0)}
                         </span>
@@ -63,7 +90,7 @@ export default async function ArtePage() {
                   <h3 className="font-heading text-lg text-brand-negro group-hover:text-brand-gris-nav transition-colors">
                     {artwork.title}
                   </h3>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
                     {artwork.series && (
                       <span className="font-body text-xs text-brand-gris-nav">
                         {artwork.series}
@@ -80,6 +107,14 @@ export default async function ArtePage() {
             </SectionReveal>
           ))}
         </div>
+
+        {allArtworks.length === 0 && (
+          <div className="text-center py-20">
+            <p className="font-body text-brand-gris-nav">
+              Proximamente \u2014 estamos preparando la galeria.
+            </p>
+          </div>
+        )}
       </section>
     </div>
   );

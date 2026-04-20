@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { createDb, furniture, eq } from "@sofi/db";
-import { SectionReveal, WhatsAppCTA } from "@sofi/ui";
+import { createDb, furniture, eq, ne, desc } from "@sofi/db";
+import { SectionReveal, WhatsAppCTA, cldGallery, cldCard } from "@sofi/ui";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -38,6 +38,13 @@ export default async function FurniturePage({ params }: Props) {
 
   if (!piece) notFound();
 
+  const related = await db
+    .select()
+    .from(furniture)
+    .where(ne(furniture.slug, slug))
+    .orderBy(desc(furniture.featured))
+    .limit(3);
+
   const gallery = (piece.gallery as string[]) ?? [];
 
   return (
@@ -48,12 +55,18 @@ export default async function FurniturePage({ params }: Props) {
             <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden">
               {piece.coverUrl ? (
                 <img
-                  src={piece.coverUrl}
+                  src={cldGallery(piece.coverUrl)}
                   alt={piece.title}
                   className="w-full h-full object-cover"
+                  loading="eager"
+                  fetchPriority="high"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center">
+                <div
+                  className="w-full h-full flex items-center justify-center"
+                  role="img"
+                  aria-label={piece.title}
+                >
                   <span className="font-heading text-[10vw] text-brand-gris-border/30">
                     {piece.title.charAt(0)}
                   </span>
@@ -71,7 +84,7 @@ export default async function FurniturePage({ params }: Props) {
 
               {piece.priceArs && (
                 <p className="font-body text-2xl font-light text-brand-negro mt-4">
-                  ${piece.priceArs.toLocaleString("es-AR")} ARS
+                  Desde ${piece.priceArs.toLocaleString("es-AR")} ARS
                 </p>
               )}
 
@@ -81,13 +94,15 @@ export default async function FurniturePage({ params }: Props) {
                 </p>
               )}
 
-              <div className="mt-8 space-y-4">
+              <div className="mt-8 space-y-0">
                 {piece.materials && (
                   <div className="flex justify-between py-3 border-b border-brand-crema">
                     <span className="font-body text-[9px] tracking-[0.25em] uppercase text-brand-gris-nav">
                       Materiales
                     </span>
-                    <span className="font-body text-sm">{piece.materials}</span>
+                    <span className="font-body text-sm text-right">
+                      {piece.materials}
+                    </span>
                   </div>
                 )}
                 {piece.dimensions && (
@@ -95,7 +110,9 @@ export default async function FurniturePage({ params }: Props) {
                     <span className="font-body text-[9px] tracking-[0.25em] uppercase text-brand-gris-nav">
                       Dimensiones
                     </span>
-                    <span className="font-body text-sm">{piece.dimensions}</span>
+                    <span className="font-body text-sm text-right">
+                      {piece.dimensions}
+                    </span>
                   </div>
                 )}
               </div>
@@ -103,9 +120,15 @@ export default async function FurniturePage({ params }: Props) {
               <div className="mt-10">
                 <WhatsAppCTA
                   label="Consultar por esta pieza"
-                  message={`Hola Sofia, me interesa el mueble "${piece.title}". ¿Podemos hablar?`}
+                  message={`Hola Sofia, me interesa el mueble "${piece.title}". Podemos hablar?`}
                   className="w-full justify-center"
                 />
+              </div>
+
+              <div className="mt-8 p-5 bg-brand-crema rounded-card">
+                <p className="font-body text-xs text-brand-negro-suave leading-relaxed">
+                  <strong className="font-medium">A medida:</strong> dimensiones, maderas y terminaciones se pueden adaptar segun el proyecto. Tiempos de fabricacion 45-60 dias.
+                </p>
               </div>
             </div>
           </div>
@@ -113,18 +136,60 @@ export default async function FurniturePage({ params }: Props) {
 
         {gallery.length > 0 && (
           <div className="mt-16 grid grid-cols-2 gap-4">
-            {gallery.map((url, i) => (
+            {gallery.map((publicId, i) => (
               <SectionReveal key={i} delay={i * 60}>
                 <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden">
                   <img
-                    src={url}
-                    alt={`${piece.title} — ${i + 1}`}
+                    src={cldGallery(publicId)}
+                    alt={`${piece.title} \u2014 ${i + 1}`}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
               </SectionReveal>
             ))}
           </div>
+        )}
+
+        {related.length > 0 && (
+          <section className="mt-24 pb-20">
+            <SectionReveal>
+              <h2 className="font-body text-[10px] tracking-[0.35em] uppercase text-brand-gris-nav mb-8">
+                Otras piezas
+              </h2>
+            </SectionReveal>
+            <div className="grid md:grid-cols-3 gap-4">
+              {related.map((p, i) => (
+                <SectionReveal key={p.id} delay={i * 60}>
+                  <Link href={`/muebles/${p.slug}`} className="group block">
+                    <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden mb-3">
+                      {p.coverUrl ? (
+                        <img
+                          src={cldCard(p.coverUrl)}
+                          alt={p.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full flex items-center justify-center"
+                          role="img"
+                          aria-label={p.title}
+                        >
+                          <span className="font-heading text-5xl text-brand-gris-border/40">
+                            {p.title.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="font-heading text-base text-brand-negro group-hover:text-brand-gris-nav transition-colors">
+                      {p.title}
+                    </h3>
+                  </Link>
+                </SectionReveal>
+              ))}
+            </div>
+          </section>
         )}
 
         <div className="mt-16 pb-24 pt-8 border-t border-brand-crema text-center">

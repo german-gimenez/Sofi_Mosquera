@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
+import { cldHero } from "@sofi/ui";
 
 interface ProjectHeroProps {
   title: string;
@@ -14,7 +14,9 @@ export function ProjectHero({ title, coverUrl }: ProjectHeroProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setReducedMotion(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -22,20 +24,30 @@ export function ProjectHero({ title, coverUrl }: ProjectHeroProps) {
     offset: ["start start", "end start"],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 1], reducedMotion ? [1, 1] : [1, 1.1]);
-  const y = useTransform(scrollYProgress, [0, 1], reducedMotion ? [0, 0] : [0, 60]);
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reducedMotion ? [1, 1] : [1, 1.1]
+  );
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reducedMotion ? [0, 0] : [0, 60]
+  );
 
   return (
-    <div ref={ref} className="relative h-[70vh] overflow-hidden mx-3 rounded-b-image">
+    <div
+      ref={ref}
+      className="relative h-[70vh] overflow-hidden mx-3 rounded-b-image"
+    >
       <motion.div className="absolute inset-0" style={{ scale, y }}>
         {coverUrl ? (
-          <Image
-            src={coverUrl}
+          <img
+            src={cldHero(coverUrl)}
             alt={title}
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority
+            className="w-full h-full object-cover"
+            loading="eager"
+            fetchPriority="high"
           />
         ) : (
           <div className="w-full h-full bg-brand-crema flex items-center justify-center">

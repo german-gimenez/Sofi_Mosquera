@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { createDb, artworks, eq } from "@sofi/db";
-import { SectionReveal, WhatsAppCTA } from "@sofi/ui";
-import { ArtworkTilt } from "@/components/artwork-tilt";
+import { createDb, artworks, eq, and, ne, desc } from "@sofi/db";
+import { SectionReveal, WhatsAppCTA, cldArtwork } from "@sofi/ui";
+import { ArtworkLightbox } from "@/components/artwork-lightbox";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!artwork) return {};
   return {
     title: artwork.title,
-    description: `${artwork.title} — ${artwork.technique ?? "Obra original"} de Sofia Mosquera`,
+    description: `${artwork.title} \u2014 ${artwork.technique ?? "Obra original"} de Sofia Mosquera`,
   };
 }
 
@@ -39,33 +39,35 @@ export default async function ArtworkPage({ params }: Props) {
 
   if (!artwork) notFound();
 
-  const gallery = (artwork.gallery as string[]) ?? [];
+  const related = artwork.series
+    ? await db
+        .select()
+        .from(artworks)
+        .where(
+          and(ne(artworks.slug, slug), eq(artworks.series, artwork.series))
+        )
+        .orderBy(desc(artworks.publishedAt))
+        .limit(3)
+    : [];
 
   return (
     <div className="pt-28">
       <div className="max-w-6xl mx-auto px-6">
         <SectionReveal>
           <div className="grid md:grid-cols-2 gap-12 items-start">
-            {/* Image */}
-            <ArtworkTilt maxTilt={4}>
-              <div className="aspect-[3/4] bg-brand-crema rounded-image overflow-hidden">
-                {artwork.coverUrl ? (
-                  <img
-                    src={artwork.coverUrl}
-                    alt={artwork.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="font-heading text-[15vw] text-brand-gris-border/30">
-                      {artwork.title.charAt(0)}
-                    </span>
-                  </div>
-                )}
+            {artwork.coverUrl ? (
+              <ArtworkLightbox
+                publicId={artwork.coverUrl}
+                title={artwork.title}
+              />
+            ) : (
+              <div className="aspect-[3/4] bg-brand-crema rounded-image overflow-hidden flex items-center justify-center">
+                <span className="font-heading text-[15vw] text-brand-gris-border/30">
+                  {artwork.title.charAt(0)}
+                </span>
               </div>
-            </ArtworkTilt>
+            )}
 
-            {/* Details */}
             <div className="py-4">
               {artwork.series && (
                 <span className="font-body text-[10px] tracking-[0.35em] uppercase text-brand-gris-nav">
@@ -87,13 +89,15 @@ export default async function ArtworkPage({ params }: Props) {
                 </p>
               ) : null}
 
-              <div className="mt-8 space-y-4">
+              <div className="mt-8 space-y-0">
                 {artwork.technique && (
                   <div className="flex justify-between py-3 border-b border-brand-crema">
                     <span className="font-body text-[9px] tracking-[0.25em] uppercase text-brand-gris-nav">
-                      Técnica
+                      Tecnica
                     </span>
-                    <span className="font-body text-sm">{artwork.technique}</span>
+                    <span className="font-body text-sm">
+                      {artwork.technique}
+                    </span>
                   </div>
                 )}
                 {artwork.widthCm && artwork.heightCm && (
@@ -109,7 +113,7 @@ export default async function ArtworkPage({ params }: Props) {
                 {artwork.year && (
                   <div className="flex justify-between py-3 border-b border-brand-crema">
                     <span className="font-body text-[9px] tracking-[0.25em] uppercase text-brand-gris-nav">
-                      Año
+                      An\u0303o
                     </span>
                     <span className="font-body text-sm">{artwork.year}</span>
                   </div>
@@ -120,33 +124,59 @@ export default async function ArtworkPage({ params }: Props) {
                 <div className="mt-10">
                   <WhatsAppCTA
                     label="Consultar por esta obra"
-                    message={`Hola Sofia, me interesa la obra "${artwork.title}"${artwork.series ? ` de la serie ${artwork.series}` : ""}. ¿Podemos hablar?`}
+                    message={`Hola Sofia, me interesa la obra "${artwork.title}"${artwork.series ? ` de la serie ${artwork.series}` : ""}. Podemos hablar?`}
                     className="w-full justify-center"
                   />
                 </div>
               )}
 
-              <p className="font-body text-xs text-brand-gris-nav mt-6">
-                Cada obra incluye certificado de autenticidad firmado por la artista.
-              </p>
+              <div className="mt-8 p-5 bg-brand-crema rounded-card">
+                <p className="font-body text-xs text-brand-negro-suave leading-relaxed">
+                  <strong className="font-medium">Certificado de autenticidad:</strong> cada obra incluye certificado firmado por la artista y acompan\u0303amiento para envio a cualquier parte del pais o del exterior.
+                </p>
+              </div>
             </div>
           </div>
         </SectionReveal>
 
-        {/* Gallery */}
-        {gallery.length > 0 && (
-          <div className="mt-16 grid grid-cols-2 gap-4">
-            {gallery.map((url, i) => (
-              <SectionReveal key={i} delay={i * 60}>
-                <div className="aspect-square bg-brand-crema rounded-image overflow-hidden">
-                  <img
-                    src={url}
-                    alt={`${artwork.title} — ${i + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </SectionReveal>
-            ))}
+        {related.length > 0 && (
+          <div className="mt-24 pb-16">
+            <SectionReveal>
+              <h2 className="font-body text-[10px] tracking-[0.35em] uppercase text-brand-gris-nav mb-8">
+                Otras obras de la serie {artwork.series}
+              </h2>
+            </SectionReveal>
+            <div className="grid grid-cols-3 gap-4">
+              {related.map((a, i) => (
+                <SectionReveal key={a.id} delay={i * 60}>
+                  <Link href={`/arte/${a.slug}`} className="group block">
+                    <div className="aspect-[3/4] bg-brand-crema rounded-image overflow-hidden">
+                      {a.coverUrl ? (
+                        <img
+                          src={cldArtwork(a.coverUrl)}
+                          alt={a.title}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full flex items-center justify-center"
+                          role="img"
+                          aria-label={a.title}
+                        >
+                          <span className="font-heading text-4xl text-brand-gris-border/40">
+                            {a.title.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="font-heading text-base text-brand-negro group-hover:text-brand-gris-nav transition-colors mt-2">
+                      {a.title}
+                    </h3>
+                  </Link>
+                </SectionReveal>
+              ))}
+            </div>
           </div>
         )}
 
@@ -155,7 +185,7 @@ export default async function ArtworkPage({ params }: Props) {
             href="/arte"
             className="font-body text-sm text-brand-gris-nav border-b border-brand-gris-nav pb-0.5 hover:text-brand-negro hover:border-brand-negro transition-colors"
           >
-            &larr; Ver toda la galería
+            &larr; Ver toda la galeria
           </Link>
         </div>
       </div>

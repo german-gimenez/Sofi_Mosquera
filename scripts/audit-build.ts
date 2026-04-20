@@ -87,7 +87,14 @@ async function main() {
   assert(await exists(resolve(root, "packages/ui/src/components/whatsapp-cta.tsx")), "WhatsAppCTA component");
   assert(await exists(resolve(root, "packages/ui/src/components/section-reveal.tsx")), "SectionReveal component");
   assert(await exists(resolve(root, "packages/ui/src/components/marquee.tsx")), "Marquee component");
+  assert(await exists(resolve(root, "packages/ui/src/components/cld-image.tsx")), "CldImage component");
+  assert(await exists(resolve(root, "packages/ui/src/lib/cloudinary.ts")), "Cloudinary helper");
   assert(await exists(resolve(root, "packages/tokens/src/index.ts")), "tokens index");
+  assert(await exists(resolve(root, "apps/web/src/components/artwork-lightbox.tsx")), "artwork lightbox");
+  assert(await exists(resolve(root, "apps/admin/src/app/api/cloudinary-sign/route.ts")), "cloudinary sign API");
+  assert(await exists(resolve(root, "apps/admin/src/components/cloudinary-upload.tsx")), "cloudinary upload widget");
+  assert(await exists(resolve(root, "scripts/upload-images.ts")), "upload script");
+  assert(await exists(resolve(root, "scripts/enrich-db.ts")), "enrich script");
 
   console.log("\nBrand DNA compliance in CSS:");
   const { readFile } = await import("fs/promises");

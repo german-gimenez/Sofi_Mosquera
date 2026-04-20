@@ -1,42 +1,79 @@
-import { SectionReveal } from "@sofi/ui";
-import Link from "next/link";
+import { SectionReveal, cldCard, cldHero } from "@sofi/ui";
+import { createDb, settings, eq } from "@sofi/db";
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Sobre Sofia Mosquera",
   description:
-    "Diseñadora de interiores y artista plástica. Conocé la historia detrás de SM Studio en Mendoza, Argentina.",
+    "Disen\u0303adora de interiores y artista plastica. Conoce la historia detras de SM Studio en Mendoza, Argentina.",
 };
 
-export default function SobrePage() {
+export default async function SobrePage() {
+  const db = createDb();
+
+  const [photosSetting] = await db
+    .select()
+    .from(settings)
+    .where(eq(settings.key, "about_photos"))
+    .limit(1);
+
+  const [aboutSetting] = await db
+    .select()
+    .from(settings)
+    .where(eq(settings.key, "about"))
+    .limit(1);
+
+  const photos = (photosSetting?.value as string[]) ?? [];
+  const about = (aboutSetting?.value as {
+    eyebrow?: string;
+    heading?: string;
+    body?: string;
+    mission?: string;
+    values?: { title: string; description: string }[];
+  } | null) ?? null;
+
+  const heroPhoto = photos[0];
+
   return (
     <div className="pt-28">
-      {/* Header */}
       <section className="max-w-7xl mx-auto px-6 pb-16">
         <SectionReveal>
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
               <span className="font-body text-[10px] font-medium tracking-[0.35em] uppercase text-brand-gris-nav">
-                Sobre
+                {about?.eyebrow ?? "Sobre"}
               </span>
               <h1 className="font-heading text-5xl md:text-6xl mt-4 text-brand-negro">
                 Sofia Mosquera
               </h1>
               <p className="font-body font-light text-brand-negro-suave mt-6 text-lg leading-relaxed">
-                Apasionada del arte en todas sus formas, creo que detrás de cada
-                obra hay un alma que se expresa y sucede lo mismo en los espacios
-                que diseñamos y habitamos.
+                {about?.body ??
+                  "Apasionada del arte en todas sus formas, creo que detras de cada obra hay un alma que se expresa y sucede lo mismo en los espacios que disen\u0303amos y habitamos."}
               </p>
               <p className="font-body font-light text-brand-negro-suave mt-4 leading-relaxed">
-                A través del interiorismo, diseño y me conecto con las personas
-                para adaptar sus espacios a la vida que sueñan vivir, reflejando
+                A traves del interiorismo, disen\u0303o y me conecto con las personas
+                para adaptar sus espacios a la vida que suen\u0303an vivir, reflejando
                 su esencia en cada detalle.
               </p>
             </div>
             <div className="aspect-[4/5] bg-brand-crema rounded-image overflow-hidden">
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="font-heading text-[15vw] text-brand-gris-border/30">SM</span>
-              </div>
+              {heroPhoto ? (
+                <img
+                  src={cldCard(heroPhoto)}
+                  alt="Sofia Mosquera"
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="font-heading text-[15vw] text-brand-gris-border/30">
+                    SM
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </SectionReveal>
@@ -47,31 +84,37 @@ export default function SobrePage() {
         <SectionReveal>
           <div className="grid md:grid-cols-3 gap-px">
             <div className="bg-brand-negro p-10">
-              <span className="font-heading text-5xl text-brand-blanco-calido/10">W</span>
+              <span className="font-heading text-5xl text-brand-blanco-calido/10">
+                W
+              </span>
               <span className="font-body text-[9px] tracking-[0.35em] uppercase text-brand-gris-nav/50 block mt-4 mb-3">
-                Por qué existe SM
+                Por que existe SM
               </span>
               <p className="font-body font-light text-sm text-brand-blanco-calido/70 leading-relaxed">
                 Creemos que cada persona merece habitar un espacio que sea un
-                reflejo genuino de quién es. Que las paredes donde vivís y
-                trabajás deberían contar tu historia.
+                reflejo genuino de quien es. Que las paredes donde vivis y
+                trabajas deberian contar tu historia.
               </p>
             </div>
             <div className="bg-brand-negro-suave p-10">
-              <span className="font-heading text-5xl text-brand-blanco-calido/10">H</span>
+              <span className="font-heading text-5xl text-brand-blanco-calido/10">
+                H
+              </span>
               <span className="font-body text-[9px] tracking-[0.35em] uppercase text-brand-gris-nav/50 block mt-4 mb-3">
-                Cómo lo hacemos
+                Como lo hacemos
               </span>
               <p className="font-body font-light text-sm text-brand-blanco-calido/70 leading-relaxed">
                 Integrando interiorismo, muebles a medida y arte original en un
-                único proceso creativo. El espacio, los muebles y las obras
-                nacen de la misma visión.
+                unico proceso creativo. El espacio, los muebles y las obras
+                nacen de la misma vision.
               </p>
             </div>
             <div className="bg-brand-negro-suave p-10">
-              <span className="font-heading text-5xl text-brand-blanco-calido/10">W</span>
+              <span className="font-heading text-5xl text-brand-blanco-calido/10">
+                W
+              </span>
               <span className="font-body text-[9px] tracking-[0.35em] uppercase text-brand-gris-nav/50 block mt-4 mb-3">
-                Qué ofrecemos
+                Que ofrecemos
               </span>
               <p className="font-body font-light text-sm text-brand-blanco-calido/70 leading-relaxed">
                 Proyectos integrales de interiorismo, muebles a medida y arte
@@ -82,6 +125,31 @@ export default function SobrePage() {
           </div>
         </SectionReveal>
       </section>
+
+      {/* Photo gallery */}
+      {photos.length > 1 && (
+        <section className="max-w-7xl mx-auto px-6 pb-16">
+          <SectionReveal>
+            <span className="font-body text-[10px] tracking-[0.35em] uppercase text-brand-gris-nav block mb-8">
+              En el estudio
+            </span>
+          </SectionReveal>
+          <div className="grid md:grid-cols-2 gap-4">
+            {photos.slice(1, 3).map((publicId, i) => (
+              <SectionReveal key={i} delay={i * 100}>
+                <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden">
+                  <img
+                    src={cldHero(publicId)}
+                    alt={`Sofia en el estudio ${i + 2}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              </SectionReveal>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Values */}
       <section className="max-w-7xl mx-auto px-6 pb-16">
@@ -94,24 +162,12 @@ export default function SobrePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Calidad",
-                description:
-                  "Diseños a medida de gran impacto. Cada material es elegido especialmente para cada proyecto.",
-              },
-              {
-                title: "Empatía",
-                description:
-                  "Para que los espacios sean un reflejo de quien los habita. Nos conectamos con tu esencia.",
-              },
-              {
-                title: "Sustentabilidad",
-                description:
-                  "Desde los materiales hasta la línea de producción. Pequeños emprendedores y trabajadores de oficio son parte de nuestra cadena.",
-              },
-            ].map((value, i) => (
-              <div key={value.title} className="bg-brand-crema p-8">
+            {(about?.values ?? [
+              { title: "Calidad", description: "Disen\u0303os a medida de gran impacto en tu calidad de vida." },
+              { title: "Empatia", description: "Para que los espacios sean un reflejo de quien los habita." },
+              { title: "Sustentabilidad", description: "Desde los materiales hasta la linea de produccion." },
+            ]).map((value) => (
+              <div key={value.title} className="bg-brand-crema p-8 rounded-card">
                 <h3 className="font-heading text-xl text-brand-negro mb-3">
                   {value.title}
                 </h3>
@@ -124,7 +180,7 @@ export default function SobrePage() {
         </SectionReveal>
       </section>
 
-      {/* Tagline */}
+      {/* Tagline block */}
       <section className="mx-3 mb-24">
         <SectionReveal>
           <div className="bg-brand-negro rounded-image px-8 md:px-16 py-14 text-center">

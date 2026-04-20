@@ -1,6 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
-import { SectionReveal } from "@sofi/ui";
+import { SectionReveal, cldCard } from "@sofi/ui";
 import { createDb, projects, desc } from "@sofi/db";
 import type { Metadata } from "next";
 
@@ -34,30 +33,32 @@ export default async function ProyectosPage() {
             Proyectos
           </h1>
           <p className="font-body font-light text-brand-negro-suave mt-4 max-w-2xl text-lg leading-relaxed">
-            Cada proyecto nace de una visión integral: interiorismo, muebles a
+            Cada proyecto nace de una vision integral: interiorismo, muebles a
             medida y arte original bajo una misma mirada.
           </p>
         </SectionReveal>
       </section>
 
-      {/* Featured */}
       {featured.length > 0 && (
         <section className="max-w-7xl mx-auto px-6 pb-16">
           <div className="grid md:grid-cols-2 gap-4">
             {featured.map((project, i) => (
               <SectionReveal key={project.id} delay={i * 80}>
                 <Link href={`/proyectos/${project.slug}`} className="group block">
-                  <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden mb-4 relative">
+                  <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden mb-4">
                     {project.coverUrl ? (
-                      <Image
-                        src={project.coverUrl}
+                      <img
+                        src={cldCard(project.coverUrl)}
                         alt={project.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading={i < 2 ? "eager" : "lazy"}
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center" role="img" aria-label={project.title}>
+                      <div
+                        className="w-full h-full flex items-center justify-center"
+                        role="img"
+                        aria-label={project.title}
+                      >
                         <span className="font-heading text-6xl text-brand-gris-border/40">
                           {project.title.charAt(0)}
                         </span>
@@ -68,7 +69,7 @@ export default async function ProyectosPage() {
                     {project.title}
                   </h3>
                   <p className="font-body text-sm font-light text-brand-gris-nav mt-1">
-                    {project.location} · {project.year}
+                    {project.location} \u00b7 {project.year}
                   </p>
                 </Link>
               </SectionReveal>
@@ -77,13 +78,12 @@ export default async function ProyectosPage() {
         </section>
       )}
 
-      {/* Rest */}
       {rest.length > 0 && (
         <section className="max-w-7xl mx-auto px-6 pb-24">
           <SectionReveal>
             <div className="flex items-center gap-5 mb-12">
               <span className="font-body text-[10px] tracking-[0.3em] uppercase text-brand-gris-nav">
-                Más proyectos
+                Mas proyectos
               </span>
               <div className="flex-1 h-px bg-brand-crema" />
             </div>
@@ -93,17 +93,20 @@ export default async function ProyectosPage() {
             {rest.map((project, i) => (
               <SectionReveal key={project.id} delay={i * 60}>
                 <Link href={`/proyectos/${project.slug}`} className="group block">
-                  <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden mb-3 relative">
+                  <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden mb-3">
                     {project.coverUrl ? (
-                      <Image
-                        src={project.coverUrl}
+                      <img
+                        src={cldCard(project.coverUrl)}
                         alt={project.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center" role="img" aria-label={project.title}>
+                      <div
+                        className="w-full h-full flex items-center justify-center"
+                        role="img"
+                        aria-label={project.title}
+                      >
                         <span className="font-heading text-5xl text-brand-gris-border/40">
                           {project.title.charAt(0)}
                         </span>
@@ -114,7 +117,7 @@ export default async function ProyectosPage() {
                     {project.title}
                   </h3>
                   <p className="font-body text-xs font-light text-brand-gris-nav mt-1">
-                    {project.location} · {project.year}
+                    {project.location} \u00b7 {project.year}
                   </p>
                 </Link>
               </SectionReveal>
@@ -126,7 +129,7 @@ export default async function ProyectosPage() {
       {allProjects.length === 0 && (
         <div className="text-center py-20 max-w-7xl mx-auto px-6">
           <p className="font-body text-brand-gris-nav">
-            Próximamente — estamos preparando el portfolio.
+            Proximamente \u2014 estamos preparando el portfolio.
           </p>
         </div>
       )}
