@@ -1,0 +1,34 @@
+---
+description: Cloudinary image patterns. Apply when handling images in the app.
+globs: apps/**/*.tsx,packages/ui/**/*.tsx,scripts/**/*.ts
+alwaysApply: false
+---
+
+# Cloudinary Patterns
+
+## DB convention
+- Store `public_id` in `cover_url` and in `gallery` jsonb, NEVER full URLs.
+- Format: `sofi-mosquera/projects/{slug}/01` or `sofi-mosquera/artworks/{slug}/cover`.
+- The `cldUrl()` helper handles both public_ids AND full URLs (backward compat).
+
+## Import helpers from @sofi/ui
+- `cldUrl(publicId, opts)` — flexible builder
+- `cldThumb(publicId)` — 600x750 fill
+- `cldCard(publicId)` — 800x1000 fill (4:5 for cards)
+- `cldHero(publicId)` — 2000x1200 fill (wide hero)
+- `cldSquare(publicId)` — 600x600 fill
+- `cldArtwork(publicId)` — 900x1200 fit (preserves aspect)
+- `cldGallery(publicId)` — 1600x1000 fill (detail gallery)
+- `cldZoom(publicId)` — 2400px limit, q:90 (lightbox)
+
+## Usage in components
+```tsx
+import { cldCard } from "@sofi/ui";
+
+<img src={cldCard(project.coverUrl)} alt={project.title} loading="lazy" />
+```
+
+## Upload workflow
+- Bulk from filesystem: `npx tsx scripts/upload-images.ts` (reads `assets/` folder)
+- Ongoing from admin UI: use `<CloudinaryUpload>` component (signed via `/api/cloudinary-sign`)
+- Max 10MB per file on free tier — compress large files first

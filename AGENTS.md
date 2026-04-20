@@ -48,18 +48,39 @@ Config: `packages/db/drizzle.config.ts`
 |---------|-------------|
 | `pnpm dev` | Start both apps |
 | `pnpm build` | Production build |
-| `pnpm db:push` | Push schema to Neon |
-| `pnpm db:seed` | Seed database |
-| `npx tsx scripts/upload-images.ts` | Upload images to Vercel Blob |
-| `npx tsx scripts/audit-build.ts` | Run structure audit |
+| `pnpm --filter @sofi/db exec drizzle-kit push` | Push schema to Neon |
+| `npx tsx scripts/upload-images.ts` | Upload images from `assets/` folder to Cloudinary |
+| `npx tsx scripts/enrich-db.ts` | Enrich DB with prices, dimensions, new furniture |
+| `npx tsx scripts/audit-build.ts` | Run structure audit (59 checks) |
+| `npx tsx packages/db/src/schema.test.ts` | Schema validation tests |
+| `npx tsx packages/tokens/src/tokens.test.ts` | Brand DNA tokens tests |
 
 ## Environment Variables
 
 Required in `.env.local`:
-- `DATABASE_URL` (Neon pooled)
-- `DATABASE_URL_UNPOOLED` (Neon direct, for migrations)
-- `BLOB_READ_WRITE_TOKEN` (Vercel Blob, for image uploads)
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` (admin only)
+- `DATABASE_URL` (Neon pooled) + `DATABASE_URL_UNPOOLED` (direct)
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+- `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` (exposed to client for URL building)
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` (admin only, optional)
+
+## Image Handling — Cloudinary
+
+Images are stored in Cloudinary under the namespace `sofi-mosquera/`:
+- `sofi-mosquera/projects/{slug}/01` ... `08` (project galleries)
+- `sofi-mosquera/artworks/{slug}/cover` (one per artwork)
+- `sofi-mosquera/about/sofia-01..03` (Sofia photos)
+
+DB stores `public_id` (not URL). URLs are built with helper `cldUrl(publicId, opts)` or presets:
+
+```ts
+import { cldThumb, cldCard, cldHero, cldSquare, cldZoom, cldGallery, cldArtwork } from "@sofi/ui";
+
+<img src={cldCard(project.coverUrl)} alt={...} />
+```
+
+Transformations (`f_auto,q_auto,c_fill,w_XXX,h_XXX,g_auto`) are applied on-the-fly via URL. No pre-generation needed.
+
+For admin uploads via UI, use `<CloudinaryUpload>` component (`apps/admin/src/components/cloudinary-upload.tsx`) which uses signed requests via `/api/cloudinary-sign`.
 
 ## Testing
 
