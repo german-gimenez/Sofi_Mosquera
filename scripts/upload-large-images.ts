@@ -59,6 +59,7 @@ async function compressIfNeeded(srcPath: string, slug: string, idx: string): Pro
 
   for (let attempt = 0; attempt < 5; attempt++) {
     buffer = await sharp(srcPath)
+      .rotate() // apply EXIF orientation then strip it (prevents double-rotation)
       .resize({ width, withoutEnlargement: true })
       .jpeg({ quality, mozjpeg: true })
       .toBuffer();
@@ -115,10 +116,21 @@ async function processLargeProjects() {
     }
     if (!dirStat.isDirectory()) continue;
 
-    const files = (await readdir(folderPath))
+    const allFiles = (await readdir(folderPath))
       .filter((f) => [".jpg", ".jpeg", ".png"].includes(extname(f).toLowerCase()))
-      .sort()
-      .slice(0, 8);
+      .sort();
+
+    // Pick evenly-spaced shots to avoid near-duplicate bursts
+    const desired = 9;
+    const files: string[] = [];
+    if (allFiles.length <= desired) {
+      files.push(...allFiles);
+    } else {
+      const step = allFiles.length / desired;
+      for (let i = 0; i < desired; i++) {
+        files.push(allFiles[Math.floor(i * step)]);
+      }
+    }
 
     if (!files.length) {
       console.log(`  SKIP (no images): ${p.slug}`);

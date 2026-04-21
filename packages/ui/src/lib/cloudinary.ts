@@ -3,7 +3,20 @@ const CLOUD_NAME =
   process.env.CLOUDINARY_CLOUD_NAME ||
   "dsrvlln9j";
 
-const BASE = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
+const BASE_IMAGE = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
+const BASE_VIDEO = `https://res.cloudinary.com/${CLOUD_NAME}/video/upload`;
+
+/** Video poster prefix — stored public_ids starting with this are video assets
+ *  and will be rendered as image thumbnails using Cloudinary's video→image pipeline. */
+const VIDEO_PREFIX = "video:";
+
+export function isVideoPublicId(publicId: string | null | undefined): boolean {
+  return !!publicId && publicId.startsWith(VIDEO_PREFIX);
+}
+
+export function videoPublicId(publicId: string): string {
+  return `${VIDEO_PREFIX}${publicId}`;
+}
 
 export interface CldUrlOptions {
   /** Target width in px. Default 1200. */
@@ -43,12 +56,17 @@ export function cldUrl(
   if (!publicIdOrUrl) return "";
   if (publicIdOrUrl.startsWith("http")) return publicIdOrUrl;
 
+  // Video-sourced poster: render as JPG thumbnail from /video/upload/ endpoint
+  const isVideo = publicIdOrUrl.startsWith(VIDEO_PREFIX);
+  const publicId = isVideo ? publicIdOrUrl.slice(VIDEO_PREFIX.length) : publicIdOrUrl;
+  const base = isVideo ? BASE_VIDEO : BASE_IMAGE;
+
   const {
     w = 1200,
     h,
     crop = "limit",
     q = "auto",
-    f = "auto",
+    f = isVideo ? "jpg" : "auto",
     g,
     effect,
     removeBg,
@@ -61,13 +79,14 @@ export function cldUrl(
   if (h) parts.push(`h_${h}`);
   if (g) parts.push(`g_${g}`);
   if (dpr) parts.push(`dpr_${dpr}`);
+  if (isVideo) parts.push("so_auto"); // pick the most visually interesting frame
 
   if (removeBg) parts.push("e_background_removal");
   if (generativeFill) parts.push("b_gen_fill");
   if (effect) parts.push(`e_${effect}`);
   if (raw) parts.push(raw);
 
-  return `${BASE}/${parts.join(",")}/${publicIdOrUrl}`;
+  return `${base}/${parts.join(",")}/${publicId}`;
 }
 
 /** Preset: thumbnail 600x750 (4:5) crop fill */
@@ -146,4 +165,17 @@ export function cldSrcSet(
   return widths
     .map((w) => `${cldUrl(publicId, { ...opts, w })} ${w}w`)
     .join(", ");
+}
+
+/** MP4 delivery URL for an uploaded Cloudinary video. Accepts bare ids or
+ *  the "video:" prefixed variant used in the DB. */
+export function cldVideoUrl(
+  publicId: string | null | undefined,
+  opts: { w?: number; q?: string | number } = {}
+): string {
+  if (!publicId) return "";
+  const id = publicId.startsWith("video:") ? publicId.slice("video:".length) : publicId;
+  const { w = 1600, q = "auto" } = opts;
+  const parts = [`f_mp4`, `q_${q}`, `w_${w}`, "c_limit"];
+  return `${BASE_VIDEO}/${parts.join(",")}/${id}.mp4`;
 }

@@ -12,6 +12,9 @@ export {
   cldUpscaled,
   cldPortrait,
   cldSrcSet,
+  cldVideoUrl,
+  isVideoPublicId,
+  videoPublicId,
   type CldUrlOptions,
 } from "./lib/cloudinary";
 export { Button } from "./components/button";

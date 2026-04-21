@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { cldHero, cldSrcSet } from "@sofi/ui";
+import { cldHero, cldSrcSet, cldVideoUrl, isVideoPublicId } from "@sofi/ui";
 
 interface ProjectHeroProps {
   title: string;
@@ -42,19 +42,33 @@ export function ProjectHero({ title, coverUrl }: ProjectHeroProps) {
     >
       <motion.div className="absolute inset-0" style={{ scale, y }}>
         {coverUrl ? (
-          <img
-            src={cldHero(coverUrl)}
-            srcSet={cldSrcSet(coverUrl, [800, 1200, 1600, 2000, 2560], {
-              h: 1200,
-              crop: "fill",
-              g: "auto",
-            })}
-            sizes="100vw"
-            alt={title}
-            className="w-full h-full object-cover"
-            loading="eager"
-            fetchPriority="high"
-          />
+          isVideoPublicId(coverUrl) && !reducedMotion ? (
+            <video
+              className="w-full h-full object-cover"
+              src={cldVideoUrl(coverUrl, { w: 2000 })}
+              poster={cldHero(coverUrl)}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-label={title}
+            />
+          ) : (
+            <img
+              src={cldHero(coverUrl)}
+              srcSet={cldSrcSet(coverUrl, [800, 1200, 1600, 2000, 2560], {
+                h: 1200,
+                crop: "fill",
+                g: "auto",
+              })}
+              sizes="100vw"
+              alt={title}
+              className="w-full h-full object-cover"
+              loading="eager"
+              fetchPriority="high"
+            />
+          )
         ) : (
           <div className="w-full h-full bg-brand-crema flex items-center justify-center">
             <span className="font-heading text-[15vw] text-brand-gris-border/20 select-none">

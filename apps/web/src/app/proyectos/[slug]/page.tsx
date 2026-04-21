@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createDb, projects, eq, and, ne } from "@sofi/db";
-import { SectionReveal, WhatsAppCTA, cldGallery, cldCard } from "@sofi/ui";
+import { SectionReveal, WhatsAppCTA, cldCard } from "@sofi/ui";
 import { ProjectHero } from "@/components/project-hero";
+import { GalleryMedia } from "@/components/gallery-media";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -121,14 +122,12 @@ export default async function ProjectPage({ params }: Props) {
           </SectionReveal>
           {gallery.map((publicId, i) => (
             <SectionReveal key={i} delay={i * 60}>
-              <div className="aspect-[16/10] bg-brand-crema rounded-image overflow-hidden">
-                <img
-                  src={cldGallery(publicId)}
-                  alt={`${project.title} — ${i + 1}`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
+              <GalleryMedia
+                publicId={publicId}
+                alt={`${project.title} — ${i + 1}`}
+                priority={i === 0}
+                className="aspect-[16/10] bg-brand-crema rounded-image overflow-hidden"
+              />
             </SectionReveal>
           ))}
         </div>
