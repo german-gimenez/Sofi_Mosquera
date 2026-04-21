@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1",
-    "drizzle-orm": "^0.39"
+    "drizzle-orm": "^0.45.2"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.30",
-    "tsx": "^4",
-    "dotenv": "^16"
+    "dotenv": "^16",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4"
   }
 }
