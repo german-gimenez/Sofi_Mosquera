@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createDb, artworks, eq, and, ne, desc } from "@sofi/db";
-import { SectionReveal, WhatsAppCTA, cldArtwork } from "@sofi/ui";
+import { SectionReveal, WhatsAppCTA, artworkMessage, cldArtwork } from "@sofi/ui";
 import { ArtworkLightbox } from "@/components/artwork-lightbox";
 import type { Metadata } from "next";
 
@@ -123,8 +123,9 @@ export default async function ArtworkPage({ params }: Props) {
               {artwork.status !== "vendido" && (
                 <div className="mt-10">
                   <WhatsAppCTA
-                    label="Consultar por esta obra"
-                    message={`Hola Sofia, me interesa la obra "${artwork.title}"${artwork.series ? ` de la serie ${artwork.series}` : ""}. Podemos hablar?`}
+                    label="Consultá por esta obra"
+                    message={artworkMessage(artwork.title, artwork.series)}
+                    ariaLabel={`Consultar por WhatsApp sobre la obra ${artwork.title}`}
                     className="w-full justify-center"
                   />
                 </div>

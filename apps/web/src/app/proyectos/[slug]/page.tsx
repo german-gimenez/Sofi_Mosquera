@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createDb, projects, eq, and, ne } from "@sofi/db";
-import { SectionReveal, WhatsAppCTA, cldCard } from "@sofi/ui";
+import { SectionReveal, WhatsAppCTA, projectMessage, cldCard } from "@sofi/ui";
 import { ProjectHero } from "@/components/project-hero";
 import { GalleryMedia } from "@/components/gallery-media";
 import type { Metadata } from "next";
@@ -140,8 +140,9 @@ export default async function ProjectPage({ params }: Props) {
               Te imaginas un espacio asi?
             </p>
             <WhatsAppCTA
-              label="Consulta tu proyecto"
-              message={`Hola Sofia, vi el proyecto "${project.title}" y me gustaria consultar sobre algo similar.`}
+              label="Consultá un proyecto similar"
+              message={projectMessage(project.title)}
+              ariaLabel={`Consultar por WhatsApp sobre un proyecto similar a ${project.title}`}
             />
           </div>
         </SectionReveal>

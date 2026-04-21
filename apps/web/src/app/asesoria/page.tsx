@@ -1,4 +1,4 @@
-import { SectionReveal, WhatsAppCTA } from "@sofi/ui";
+import { SectionReveal, WhatsAppCTA, WHATSAPP_MESSAGES } from "@sofi/ui";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -249,8 +249,8 @@ export default function AsesoriaPage() {
             Coordinamos tu primera asesoria por WhatsApp. Sin compromiso.
           </p>
           <WhatsAppCTA
-            label="Coordina tu asesoria"
-            message="Hola Sofia, me gustaria coordinar una asesoria de diseño para mi espacio."
+            label="Coordiná tu asesoría"
+            message={WHATSAPP_MESSAGES.asesoria}
           />
         </SectionReveal>
       </section>

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createDb, furniture, eq, ne, desc } from "@sofi/db";
-import { SectionReveal, WhatsAppCTA, cldGallery, cldCard } from "@sofi/ui";
+import { SectionReveal, WhatsAppCTA, furnitureMessage, cldGallery, cldCard } from "@sofi/ui";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -119,8 +119,9 @@ export default async function FurniturePage({ params }: Props) {
 
               <div className="mt-10">
                 <WhatsAppCTA
-                  label="Consultar por esta pieza"
-                  message={`Hola Sofia, me interesa el mueble "${piece.title}". Podemos hablar?`}
+                  label="Consultá por esta pieza"
+                  message={furnitureMessage(piece.title)}
+                  ariaLabel={`Consultar por WhatsApp sobre el mueble ${piece.title}`}
                   className="w-full justify-center"
                 />
               </div>

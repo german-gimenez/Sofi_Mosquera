@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SectionReveal, WhatsAppCTA, cldCard } from "@sofi/ui";
+import { SectionReveal, WhatsAppCTA, WHATSAPP_MESSAGES, cldCard } from "@sofi/ui";
 import { createDb, furniture, desc } from "@sofi/db";
 import type { Metadata } from "next";
 
@@ -90,8 +90,8 @@ export default async function MueblesPage() {
                 proyecto. Consultanos por tu pieza ideal.
               </p>
               <WhatsAppCTA
-                label="Consultar mueble a medida"
-                message="Hola Sofia, me interesa diseñar un mueble a medida."
+                label="Consultá un mueble a medida"
+                message={WHATSAPP_MESSAGES["muebles-custom"]}
               />
             </div>
           </SectionReveal>
@@ -110,8 +110,8 @@ export default async function MueblesPage() {
                 materiales y terminaciones. Contanos que necesitas.
               </p>
               <WhatsAppCTA
-                label="Consultar mueble personalizado"
-                message="Hola Sofia, me interesa diseñar un mueble a medida para mi espacio."
+                label="Personalizá esta pieza"
+                message={WHATSAPP_MESSAGES["muebles-personalize"]}
               />
             </div>
           </SectionReveal>

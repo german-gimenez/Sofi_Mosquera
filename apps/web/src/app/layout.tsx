@@ -3,7 +3,7 @@ import { Instrument_Serif, Jost } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
-import { WhatsAppCTA } from "@sofi/ui";
+import { FloatingWhatsApp } from "@/components/floating-whatsapp";
 
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
@@ -79,7 +79,7 @@ export default function RootLayout({
         <Nav />
         <main id="main-content">{children}</main>
         <Footer />
-        <WhatsAppCTA variant="floating" />
+        <FloatingWhatsApp />
       </body>
     </html>
   );

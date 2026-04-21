@@ -6,7 +6,9 @@
   "types": "./src/index.ts",
   "scripts": {
     "build": "echo '@sofi/ui: transpiled by consuming app'",
-    "lint": "echo '@sofi/ui: lint via consuming app'"
+    "lint": "echo '@sofi/ui: lint via consuming app'",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "class-variance-authority": "^0.7",

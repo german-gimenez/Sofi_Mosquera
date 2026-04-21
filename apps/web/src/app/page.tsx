@@ -3,6 +3,7 @@ import {
   SectionReveal,
   Marquee,
   WhatsAppCTA,
+  WHATSAPP_MESSAGES,
   cldHero,
   cldCard,
   cldSquare,
@@ -275,8 +276,8 @@ export default async function HomePage() {
               </p>
             </div>
             <WhatsAppCTA
-              label="Coordina tu asesoria"
-              message="Hola Sofia, me interesa coordinar una asesoria para mi proyecto."
+              label="Coordiná tu asesoría"
+              message={WHATSAPP_MESSAGES.home}
             />
           </div>
         </SectionReveal>

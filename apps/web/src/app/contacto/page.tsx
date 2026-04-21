@@ -1,4 +1,9 @@
-import { SectionReveal, WhatsAppCTA } from "@sofi/ui";
+import {
+  SectionReveal,
+  WhatsAppCTA,
+  WHATSAPP_MESSAGES,
+  buildWhatsAppUrl,
+} from "@sofi/ui";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,7 +16,7 @@ const contactInfo = [
   {
     label: "WhatsApp",
     value: "+54 9 261 545 6913",
-    href: "https://wa.me/5492615456913",
+    href: buildWhatsAppUrl(WHATSAPP_MESSAGES.contacto),
   },
   {
     label: "Instagram Interiorismo",
@@ -78,7 +83,7 @@ export default function ContactoPage() {
               <div className="mt-10">
                 <WhatsAppCTA
                   label="Escribinos por WhatsApp"
-                  message="Hola Sofia, me gustaria consultar sobre un proyecto."
+                  message={WHATSAPP_MESSAGES.contacto}
                 />
               </div>
             </div>
