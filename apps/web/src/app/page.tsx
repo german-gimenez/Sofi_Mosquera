@@ -25,7 +25,7 @@ const services = [
     num: "01",
     title: "Interiorismo",
     description:
-      "Proyectos integrales de disen\u0303o interior. Del concepto a la obra, con supervision en cada etapa.",
+      "Proyectos integrales de diseño interior. Del concepto a la obra, con supervision en cada etapa.",
     href: "/proyectos",
   },
   {
@@ -39,7 +39,7 @@ const services = [
     num: "03",
     title: "Muebles a Medida",
     description:
-      "Piezas disen\u0303adas y fabricadas para cada proyecto. Materiales nobles, terminaciones premium.",
+      "Piezas diseñadas y fabricadas para cada proyecto. Materiales nobles, terminaciones premium.",
     href: "/muebles",
   },
 ];
@@ -176,7 +176,7 @@ export default async function HomePage() {
                     {project.title}
                   </h3>
                   <p className="font-body text-sm font-light text-brand-gris-nav mt-1">
-                    {project.location} \u00b7 {project.year}
+                    {project.location} · {project.year}
                   </p>
                 </Link>
               </SectionReveal>
@@ -193,11 +193,11 @@ export default async function HomePage() {
               Lo que nos hace unicos
             </span>
             <p className="font-heading text-2xl md:text-4xl text-brand-blanco-calido mt-6 max-w-3xl mx-auto leading-relaxed">
-              Sofia no solo disen\u0303a espacios \u2014{" "}
+              Sofia no solo diseña espacios —{" "}
               <span className="italic text-brand-gris-nav">
                 los integra con arte propio.
               </span>{" "}
-              El mismo estudio que disen\u0303a tu living puede crear el cuadro que lo completa.
+              El mismo estudio que diseña tu living puede crear el cuadro que lo completa.
             </p>
           </div>
         </SectionReveal>
@@ -271,7 +271,7 @@ export default async function HomePage() {
                 Tenes un espacio que todavia no te representa?
               </h2>
               <p className="font-body font-light text-brand-negro-suave mt-3">
-                Coordinamos una asesoria y empezamos a disen\u0303ar tu esencia.
+                Coordinamos una asesoria y empezamos a diseñar tu esencia.
               </p>
             </div>
             <WhatsAppCTA

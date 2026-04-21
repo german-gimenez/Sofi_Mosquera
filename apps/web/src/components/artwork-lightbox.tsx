@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cldZoom, cldCard } from "@sofi/ui";
 import { ArtworkTilt } from "./artwork-tilt";
 
@@ -11,23 +11,54 @@ interface ArtworkLightboxProps {
 
 export function ArtworkLightbox({ publicId, title }: ArtworkLightboxProps) {
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      // Focus trap — keep focus inside the dialog
+      if (e.key === "Tab") {
+        const focusables = dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
+
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+
+    // Move focus into the dialog
+    closeRef.current?.focus();
+
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      // Return focus to the trigger
+      triggerRef.current?.focus();
     };
   }, [open]);
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
         className="block w-full cursor-zoom-in"
@@ -47,6 +78,7 @@ export function ArtworkLightbox({ publicId, title }: ArtworkLightboxProps) {
 
       {open && (
         <div
+          ref={dialogRef}
           className="fixed inset-0 z-[100] bg-brand-negro/95 flex items-center justify-center p-4 md:p-12 cursor-zoom-out"
           onClick={() => setOpen(false)}
           role="dialog"
@@ -54,10 +86,14 @@ export function ArtworkLightbox({ publicId, title }: ArtworkLightboxProps) {
           aria-label={`Vista ampliada de ${title}`}
         >
           <button
+            ref={closeRef}
             type="button"
-            onClick={() => setOpen(false)}
-            className="absolute top-6 right-6 text-brand-blanco-calido font-body text-sm tracking-widest uppercase hover:text-brand-gris-nav"
-            aria-label="Cerrar"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(false);
+            }}
+            className="absolute top-6 right-6 text-brand-blanco-calido font-body text-sm tracking-widest uppercase hover:text-brand-gris-nav focus:outline-none focus:ring-2 focus:ring-brand-blanco-calido rounded px-2 py-1"
+            aria-label="Cerrar vista ampliada"
           >
             Cerrar [ESC]
           </button>

@@ -141,7 +141,7 @@ export default async function FurniturePage({ params }: Props) {
                 <div className="aspect-[4/3] bg-brand-crema rounded-image overflow-hidden">
                   <img
                     src={cldGallery(publicId)}
-                    alt={`${piece.title} \u2014 ${i + 1}`}
+                    alt={`${piece.title} — ${i + 1}`}
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />

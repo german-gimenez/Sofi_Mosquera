@@ -19,7 +19,14 @@ const jost = Jost({
   display: "swap",
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://sofimosquera.com";
+const CLOUD =
+  process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? "dsrvlln9j";
+const OG_IMAGE = `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto,c_fill,g_auto,w_1200,h_630/sofi-mosquera/projects/casa-susel/01`;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Sofia Mosquera — Interiorismo · Arte · Muebles a medida",
     template: "%s | Sofia Mosquera",
@@ -38,8 +45,23 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_AR",
-    url: "https://sofimosquera.com",
+    url: SITE_URL,
     siteName: "Sofia Mosquera",
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Sofia Mosquera — Interiorismo, Arte y Muebles",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sofia Mosquera — Interiorismo · Arte · Muebles a medida",
+    description:
+      "Diseñamos espacios que reflejan tu esencia. Interiorismo, arte original y muebles a medida.",
+    images: [OG_IMAGE],
   },
 };
 

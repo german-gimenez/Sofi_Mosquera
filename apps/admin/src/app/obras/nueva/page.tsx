@@ -1,6 +1,9 @@
-import { redirect } from "next/navigation";
-import { createDb, artworks } from "@sofi/db";
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { CloudinaryUpload } from "@/components/cloudinary-upload";
 
 function slugify(text: string): string {
   return text
@@ -11,30 +14,45 @@ function slugify(text: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-async function createArtwork(formData: FormData) {
-  "use server";
-
-  const db = createDb();
-  const title = formData.get("title") as string;
-
-  await db.insert(artworks).values({
-    slug: slugify(title),
-    title,
-    series: (formData.get("series") as string) || null,
-    year: formData.get("year") ? Number(formData.get("year")) : null,
-    widthCm: formData.get("width") ? Number(formData.get("width")) : null,
-    heightCm: formData.get("height") ? Number(formData.get("height")) : null,
-    technique: (formData.get("technique") as string) || null,
-    priceArs: formData.get("price") ? Number(formData.get("price")) : null,
-    status: (formData.get("status") as string) || "disponible",
-    featured: formData.get("featured") === "on",
-    publishedAt: formData.get("publish") === "on" ? new Date() : null,
-  });
-
-  redirect("/obras");
-}
-
 export default function NewArtworkPage() {
+  const router = useRouter();
+  const [coverId, setCoverId] = useState<string>("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      slug: slugify(formData.get("title") as string),
+      title: formData.get("title"),
+      series: formData.get("series") || null,
+      technique: formData.get("technique") || null,
+      widthCm: formData.get("width") ? Number(formData.get("width")) : null,
+      heightCm: formData.get("height") ? Number(formData.get("height")) : null,
+      year: formData.get("year") ? Number(formData.get("year")) : null,
+      priceArs: formData.get("price") ? Number(formData.get("price")) : null,
+      status: formData.get("status") || "disponible",
+      featured: formData.get("featured") === "on",
+      publish: formData.get("publish") === "on",
+      coverUrl: coverId,
+    };
+
+    const res = await fetch("/api/artworks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      router.push("/obras");
+    } else {
+      setSubmitting(false);
+      alert("Error al crear la obra");
+    }
+  }
+
   return (
     <div className="min-h-screen">
       <header className="border-b border-brand-crema px-6 py-4 flex items-center gap-4">
@@ -48,7 +66,7 @@ export default function NewArtworkPage() {
       <main className="max-w-2xl mx-auto px-6 py-8">
         <h1 className="text-2xl font-light mb-8">Nueva Obra de Arte</h1>
 
-        <form action={createArtwork} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-[9px] tracking-[0.3em] uppercase text-brand-gris-nav mb-2">Título *</label>
             <input name="title" required className="w-full border border-brand-crema bg-brand-blanco-calido px-4 py-3 text-sm focus:outline-none focus:border-brand-gris-nav" />
@@ -95,6 +113,22 @@ export default function NewArtworkPage() {
             </div>
           </div>
 
+          <div>
+            <label className="block text-[9px] tracking-[0.3em] uppercase text-brand-gris-nav mb-3">Imagen</label>
+            <div className="border border-brand-crema bg-brand-blanco-calido p-4">
+              <CloudinaryUpload
+                folder="sofi-mosquera/artworks"
+                label="Subir imagen de la obra"
+                onUploaded={(publicId) => setCoverId(publicId)}
+              />
+              {coverId && (
+                <p className="text-xs text-brand-gris-nav mt-3">
+                  Cover: <code className="text-brand-negro">{coverId}</code>
+                </p>
+              )}
+            </div>
+          </div>
+
           <div className="flex gap-6">
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" name="featured" className="accent-brand-negro" />
@@ -106,8 +140,8 @@ export default function NewArtworkPage() {
             </label>
           </div>
 
-          <button type="submit" className="w-full bg-brand-negro text-brand-blanco-calido py-3 text-sm hover:bg-brand-negro-suave transition-colors">
-            Crear obra
+          <button type="submit" disabled={submitting} className="w-full bg-brand-negro text-brand-blanco-calido py-3 text-sm hover:bg-brand-negro-suave transition-colors disabled:opacity-50">
+            {submitting ? "Creando..." : "Crear obra"}
           </button>
         </form>
       </main>

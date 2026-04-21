@@ -8,6 +8,10 @@ export {
   cldZoom,
   cldGallery,
   cldArtwork,
+  cldEnhanced,
+  cldUpscaled,
+  cldPortrait,
+  cldSrcSet,
   type CldUrlOptions,
 } from "./lib/cloudinary";
 export { Button } from "./components/button";

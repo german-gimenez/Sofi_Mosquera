@@ -30,7 +30,7 @@ const contactInfo = [
   },
   {
     label: "Horarios",
-    value: "Lunes a viernes \u00b7 09:00 a 18:00",
+    value: "Lunes a viernes · 09:00 a 18:00",
     href: null,
   },
 ];
@@ -70,9 +70,9 @@ export default function ContactoPage() {
                 tu proyecto
               </h1>
               <p className="font-body font-light text-brand-negro-suave mt-6 leading-relaxed">
-                Si tenes un espacio que todavia no te representa \u2014 una casa, una
-                oficina, un local \u2014 coordinamos una asesoria y empezamos a
-                disen\u0303ar tu esencia.
+                Si tenes un espacio que todavia no te representa — una casa, una
+                oficina, un local — coordinamos una asesoria y empezamos a
+                diseñar tu esencia.
               </p>
 
               <div className="mt-10">

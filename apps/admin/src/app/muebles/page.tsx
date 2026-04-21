@@ -19,7 +19,7 @@ export default async function FurnitureListPage() {
           href="/muebles/nuevo"
           className="bg-brand-negro text-brand-blanco-calido px-4 py-2 text-sm hover:bg-brand-negro-suave transition-colors"
         >
-          + Nuevo
+          + Nuevo mueble
         </Link>
       </header>
 

@@ -1,4 +1,4 @@
-import { SectionReveal, cldCard, cldHero } from "@sofi/ui";
+import { SectionReveal, cldHero, cldPortrait } from "@sofi/ui";
 import { createDb, settings, eq } from "@sofi/db";
 import type { Metadata } from "next";
 
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Sobre Sofia Mosquera",
   description:
-    "Disen\u0303adora de interiores y artista plastica. Conoce la historia detras de SM Studio en Mendoza, Argentina.",
+    "Diseñadora de interiores y artista plastica. Conoce la historia detras de SM Studio en Mendoza, Argentina.",
 };
 
 export default async function SobrePage() {
@@ -50,18 +50,18 @@ export default async function SobrePage() {
               </h1>
               <p className="font-body font-light text-brand-negro-suave mt-6 text-lg leading-relaxed">
                 {about?.body ??
-                  "Apasionada del arte en todas sus formas, creo que detras de cada obra hay un alma que se expresa y sucede lo mismo en los espacios que disen\u0303amos y habitamos."}
+                  "Apasionada del arte en todas sus formas, creo que detras de cada obra hay un alma que se expresa y sucede lo mismo en los espacios que diseñamos y habitamos."}
               </p>
               <p className="font-body font-light text-brand-negro-suave mt-4 leading-relaxed">
-                A traves del interiorismo, disen\u0303o y me conecto con las personas
-                para adaptar sus espacios a la vida que suen\u0303an vivir, reflejando
+                A traves del interiorismo, diseño y me conecto con las personas
+                para adaptar sus espacios a la vida que sueñan vivir, reflejando
                 su esencia en cada detalle.
               </p>
             </div>
             <div className="aspect-[4/5] bg-brand-crema rounded-image overflow-hidden">
               {heroPhoto ? (
                 <img
-                  src={cldCard(heroPhoto)}
+                  src={cldPortrait(heroPhoto)}
                   alt="Sofia Mosquera"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -163,7 +163,7 @@ export default async function SobrePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {(about?.values ?? [
-              { title: "Calidad", description: "Disen\u0303os a medida de gran impacto en tu calidad de vida." },
+              { title: "Calidad", description: "Diseños a medida de gran impacto en tu calidad de vida." },
               { title: "Empatia", description: "Para que los espacios sean un reflejo de quien los habita." },
               { title: "Sustentabilidad", description: "Desde los materiales hasta la linea de produccion." },
             ]).map((value) => (

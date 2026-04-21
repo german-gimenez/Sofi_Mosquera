@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 
 interface CloudinaryUploadProps {
@@ -15,10 +16,38 @@ export function CloudinaryUpload({
   onUploaded,
   label = "Subir imagen",
 }: CloudinaryUploadProps) {
+  const [mounted, setMounted] = useState(false);
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="bg-brand-negro/50 text-brand-blanco-calido px-4 py-2 text-sm"
+      >
+        Cargando...
+      </button>
+    );
+  }
+
+  if (!cloudName) {
+    return (
+      <div className="text-xs text-red-600">
+        Cloudinary no configurado (NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME missing)
+      </div>
+    );
+  }
+
   return (
     <CldUploadWidget
       signatureEndpoint="/api/cloudinary-sign"
       options={{
+        cloudName,
         folder,
         publicId,
         clientAllowedFormats: ["jpg", "jpeg", "png", "webp", "avif"],

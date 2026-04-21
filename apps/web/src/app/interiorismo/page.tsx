@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Interiorismo",
   description:
-    "Proyectos integrales de interiorismo residencial y comercial. Disen\u0303o que refleja la esencia de quien habita cada espacio.",
+    "Proyectos integrales de interiorismo residencial y comercial. Diseño que refleja la esencia de quien habita cada espacio.",
 };
 
 export default async function InteriorismoPage() {
@@ -33,7 +33,7 @@ export default async function InteriorismoPage() {
             Interiorismo
           </h1>
           <p className="font-body font-light text-brand-negro-suave mt-4 max-w-2xl text-lg leading-relaxed">
-            Disen\u0303amos cada espacio desde una vision integral, combinando
+            Diseñamos cada espacio desde una vision integral, combinando
             materiales nobles, arte y muebles a medida para crear ambientes que
             dialogan con quienes los habitan.
           </p>
@@ -85,7 +85,7 @@ export default async function InteriorismoPage() {
                     {project.title}
                   </h3>
                   <p className="font-body text-sm font-light text-brand-gris-nav mt-1">
-                    {project.location} \u00b7 {project.year}
+                    {project.location} · {project.year}
                   </p>
                 </Link>
               </SectionReveal>
@@ -139,7 +139,7 @@ export default async function InteriorismoPage() {
                     {project.title}
                   </h3>
                   <p className="font-body text-sm font-light text-brand-gris-nav mt-1">
-                    {project.location} \u00b7 {project.year}
+                    {project.location} · {project.year}
                   </p>
                 </Link>
               </SectionReveal>

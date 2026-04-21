@@ -94,7 +94,14 @@ async function main() {
   assert(await exists(resolve(root, "apps/admin/src/app/api/cloudinary-sign/route.ts")), "cloudinary sign API");
   assert(await exists(resolve(root, "apps/admin/src/components/cloudinary-upload.tsx")), "cloudinary upload widget");
   assert(await exists(resolve(root, "scripts/upload-images.ts")), "upload script");
+  assert(await exists(resolve(root, "scripts/upload-large-images.ts")), "compress+upload script");
   assert(await exists(resolve(root, "scripts/enrich-db.ts")), "enrich script");
+  assert(await exists(resolve(root, "scripts/fix-unicode-jsx.ts")), "unicode fix script");
+  assert(await exists(resolve(root, "scripts/run-tests.ts")), "test runner");
+  assert(await exists(resolve(root, "packages/ui/src/lib/cloudinary.test.ts")), "cloudinary tests");
+  assert(await exists(resolve(root, "apps/admin/src/app/api/projects/route.ts")), "admin projects API");
+  assert(await exists(resolve(root, "apps/admin/src/app/api/artworks/route.ts")), "admin artworks API");
+  assert(await exists(resolve(root, "apps/admin/src/app/muebles/nuevo/page.tsx")), "admin muebles nuevo");
 
   console.log("\nBrand DNA compliance in CSS:");
   const { readFile } = await import("fs/promises");

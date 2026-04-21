@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { cn } from "../lib/utils";
 
 interface MarqueeProps {
@@ -18,12 +19,48 @@ export function Marquee({
   dark = true,
 }: MarqueeProps) {
   const text = items.join(separator) + separator;
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    setReducedMotion(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }, []);
+
+  // Static version for reduced motion
+  if (reducedMotion) {
+    return (
+      <div
+        className={cn(
+          "overflow-hidden",
+          dark
+            ? "bg-brand-negro text-brand-blanco-calido"
+            : "bg-brand-crema text-brand-negro",
+          "py-4 rounded-image",
+          className
+        )}
+      >
+        <div className="flex justify-center gap-4 flex-wrap px-4">
+          {items.map((item, i) => (
+            <span
+              key={i}
+              className="font-body font-light text-sm tracking-[0.15em] uppercase"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
       className={cn(
         "overflow-hidden whitespace-nowrap",
-        dark ? "bg-brand-negro text-brand-blanco-calido" : "bg-brand-crema text-brand-negro",
+        dark
+          ? "bg-brand-negro text-brand-blanco-calido"
+          : "bg-brand-crema text-brand-negro",
         "py-4 rounded-image",
         className
       )}
@@ -35,10 +72,16 @@ export function Marquee({
         <span className="font-body font-light text-sm tracking-[0.15em] uppercase px-4">
           {text}
         </span>
-        <span className="font-body font-light text-sm tracking-[0.15em] uppercase px-4" aria-hidden>
+        <span
+          className="font-body font-light text-sm tracking-[0.15em] uppercase px-4"
+          aria-hidden
+        >
           {text}
         </span>
-        <span className="font-body font-light text-sm tracking-[0.15em] uppercase px-4" aria-hidden>
+        <span
+          className="font-body font-light text-sm tracking-[0.15em] uppercase px-4"
+          aria-hidden
+        >
           {text}
         </span>
       </div>

@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!artwork) return {};
   return {
     title: artwork.title,
-    description: `${artwork.title} \u2014 ${artwork.technique ?? "Obra original"} de Sofia Mosquera`,
+    description: `${artwork.title} — ${artwork.technique ?? "Obra original"} de Sofia Mosquera`,
   };
 }
 
@@ -113,7 +113,7 @@ export default async function ArtworkPage({ params }: Props) {
                 {artwork.year && (
                   <div className="flex justify-between py-3 border-b border-brand-crema">
                     <span className="font-body text-[9px] tracking-[0.25em] uppercase text-brand-gris-nav">
-                      An\u0303o
+                      Año
                     </span>
                     <span className="font-body text-sm">{artwork.year}</span>
                   </div>
@@ -132,7 +132,7 @@ export default async function ArtworkPage({ params }: Props) {
 
               <div className="mt-8 p-5 bg-brand-crema rounded-card">
                 <p className="font-body text-xs text-brand-negro-suave leading-relaxed">
-                  <strong className="font-medium">Certificado de autenticidad:</strong> cada obra incluye certificado firmado por la artista y acompan\u0303amiento para envio a cualquier parte del pais o del exterior.
+                  <strong className="font-medium">Certificado de autenticidad:</strong> cada obra incluye certificado firmado por la artista y acompañamiento para envio a cualquier parte del pais o del exterior.
                 </p>
               </div>
             </div>

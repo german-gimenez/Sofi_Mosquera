@@ -37,9 +37,10 @@ export default async function ProjectsListPage() {
             {allProjects.map((project) => (
               <tr key={project.id} className="border-b border-brand-crema hover:bg-brand-crema/50 transition-colors">
                 <td className="py-4">
-                  <Link href={`/proyectos/${project.id}`} className="text-sm hover:underline">
-                    {project.title}
-                  </Link>
+                  <span className="text-sm">{project.title}</span>
+                  <span className="block text-xs text-brand-gris-nav">
+                    {project.slug}
+                  </span>
                 </td>
                 <td className="py-4 text-sm text-brand-gris-nav capitalize">{project.category}</td>
                 <td className="py-4 text-sm text-brand-gris-nav">{project.year ?? "—"}</td>

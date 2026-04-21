@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Asesoria de Diseno",
   description:
-    "Consulta tu proyecto con Sofia Mosquera. Asesorias de disen\u0303o de interiores para transformar tu espacio.",
+    "Consulta tu proyecto con Sofia Mosquera. Asesorias de diseño de interiores para transformar tu espacio.",
 };
 
 const steps = [
@@ -16,7 +16,7 @@ const steps = [
   },
   {
     num: "02",
-    title: "Disen\u0303amos tu espacio integral",
+    title: "Diseñamos tu espacio integral",
     description:
       "Interiorismo + muebles + arte en un unico proceso creativo alineado a tu identidad.",
   },
@@ -36,7 +36,7 @@ const comparison = [
   {
     feature: "Alcance",
     asesoria: "Orientacion puntual",
-    integral: "Disen\u0303o completo + obra",
+    integral: "Diseño completo + obra",
   },
   {
     feature: "Incluye renders 3D",
@@ -51,7 +51,7 @@ const comparison = [
   {
     feature: "Muebles a medida",
     asesoria: "Recomendaciones",
-    integral: "Disen\u0303o y produccion",
+    integral: "Diseño y produccion",
   },
   {
     feature: "Obras de arte",
@@ -250,7 +250,7 @@ export default function AsesoriaPage() {
           </p>
           <WhatsAppCTA
             label="Coordina tu asesoria"
-            message="Hola Sofia, me gustaria coordinar una asesoria de disen\u0303o para mi espacio."
+            message="Hola Sofia, me gustaria coordinar una asesoria de diseño para mi espacio."
           />
         </SectionReveal>
       </section>

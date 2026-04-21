@@ -71,7 +71,7 @@ export default async function ProjectPage({ params }: Props) {
             {project.year && (
               <div>
                 <span className="font-body text-[9px] tracking-[0.3em] uppercase text-brand-gris-nav">
-                  An\u0303o
+                  Año
                 </span>
                 <p className="font-body text-sm mt-1">{project.year}</p>
               </div>
@@ -124,7 +124,7 @@ export default async function ProjectPage({ params }: Props) {
               <div className="aspect-[16/10] bg-brand-crema rounded-image overflow-hidden">
                 <img
                   src={cldGallery(publicId)}
-                  alt={`${project.title} \u2014 ${i + 1}`}
+                  alt={`${project.title} — ${i + 1}`}
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />

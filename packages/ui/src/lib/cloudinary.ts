@@ -18,8 +18,16 @@ export interface CldUrlOptions {
   f?: string;
   /** Gravity: "auto" (default for fill), "face", "center". */
   g?: string;
+  /** AI effects: "improve", "upscale", "sharpen", "art:audrey", etc. */
+  effect?: string;
+  /** Background removal (AI). */
+  removeBg?: boolean;
+  /** Generative fill outwards. */
+  generativeFill?: boolean;
   /** Extra raw transformation string (appended). */
   raw?: string;
+  /** Device pixel ratio. Default "auto". */
+  dpr?: string | number;
 }
 
 /**
@@ -35,11 +43,28 @@ export function cldUrl(
   if (!publicIdOrUrl) return "";
   if (publicIdOrUrl.startsWith("http")) return publicIdOrUrl;
 
-  const { w = 1200, h, crop = "limit", q = "auto", f = "auto", g, raw } = opts;
+  const {
+    w = 1200,
+    h,
+    crop = "limit",
+    q = "auto",
+    f = "auto",
+    g,
+    effect,
+    removeBg,
+    generativeFill,
+    raw,
+    dpr = "auto",
+  } = opts;
 
   const parts = [`f_${f}`, `q_${q}`, `c_${crop}`, `w_${w}`];
   if (h) parts.push(`h_${h}`);
   if (g) parts.push(`g_${g}`);
+  if (dpr) parts.push(`dpr_${dpr}`);
+
+  if (removeBg) parts.push("e_background_removal");
+  if (generativeFill) parts.push("b_gen_fill");
+  if (effect) parts.push(`e_${effect}`);
   if (raw) parts.push(raw);
 
   return `${BASE}/${parts.join(",")}/${publicIdOrUrl}`;
@@ -78,4 +103,47 @@ export function cldGallery(publicId: string | null | undefined): string {
 /** Preset: artwork portrait (3:4) */
 export function cldArtwork(publicId: string | null | undefined): string {
   return cldUrl(publicId, { w: 900, h: 1200, crop: "fit" });
+}
+
+/** AI preset: auto-enhance (improve color + contrast automatically). */
+export function cldEnhanced(
+  publicId: string | null | undefined,
+  opts: Partial<CldUrlOptions> = {}
+): string {
+  return cldUrl(publicId, { w: 1600, h: 1000, crop: "fill", g: "auto", effect: "improve", ...opts });
+}
+
+/** AI preset: upscale lower-res originals (good for art up close). */
+export function cldUpscaled(
+  publicId: string | null | undefined,
+  opts: Partial<CldUrlOptions> = {}
+): string {
+  return cldUrl(publicId, { w: 2400, crop: "limit", effect: "upscale", ...opts });
+}
+
+/** AI preset: sharp portrait. */
+export function cldPortrait(
+  publicId: string | null | undefined,
+  opts: Partial<CldUrlOptions> = {}
+): string {
+  return cldUrl(publicId, {
+    w: 900,
+    h: 1200,
+    crop: "fill",
+    g: "face:auto",
+    effect: "sharpen:100",
+    ...opts,
+  });
+}
+
+/** Responsive srcset string for use in <img srcSet>. */
+export function cldSrcSet(
+  publicId: string | null | undefined,
+  widths: number[] = [400, 800, 1200, 1600, 2000],
+  opts: CldUrlOptions = {}
+): string {
+  if (!publicId) return "";
+  return widths
+    .map((w) => `${cldUrl(publicId, { ...opts, w })} ${w}w`)
+    .join(", ");
 }

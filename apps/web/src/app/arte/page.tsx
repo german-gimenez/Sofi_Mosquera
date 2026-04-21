@@ -33,8 +33,8 @@ export default async function ArtePage() {
             Arte Original
           </h1>
           <p className="font-body font-light text-brand-negro-suave mt-4 max-w-2xl text-lg leading-relaxed">
-            Cada pieza nace de la misma sensibilidad con la que disen\u0303amos
-            espacios. Arte que no decora \u2014 transforma.
+            Cada pieza nace de la misma sensibilidad con la que diseñamos
+            espacios. Arte que no decora — transforma.
           </p>
         </SectionReveal>
       </section>
@@ -111,7 +111,7 @@ export default async function ArtePage() {
         {allArtworks.length === 0 && (
           <div className="text-center py-20">
             <p className="font-body text-brand-gris-nav">
-              Proximamente \u2014 estamos preparando la galeria.
+              Proximamente — estamos preparando la galeria.
             </p>
           </div>
         )}

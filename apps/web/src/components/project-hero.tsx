@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { cldHero } from "@sofi/ui";
+import { cldHero, cldSrcSet } from "@sofi/ui";
 
 interface ProjectHeroProps {
   title: string;
@@ -44,6 +44,12 @@ export function ProjectHero({ title, coverUrl }: ProjectHeroProps) {
         {coverUrl ? (
           <img
             src={cldHero(coverUrl)}
+            srcSet={cldSrcSet(coverUrl, [800, 1200, 1600, 2000, 2560], {
+              h: 1200,
+              crop: "fill",
+              g: "auto",
+            })}
+            sizes="100vw"
             alt={title}
             className="w-full h-full object-cover"
             loading="eager"

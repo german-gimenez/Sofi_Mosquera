@@ -58,9 +58,7 @@ const ARTWORKS: ArtworkMap[] = [
   { file: "CUADROS SOFI MOSQUERA/MURI.jpg", slug: "muri" },
   { file: "CUADROS SOFI MOSQUERA/MUSICA.png", slug: "musica" },
   { file: "CUADROS SOFI MOSQUERA/INTERCAMBIO.jpg", slug: "intercambio" },
-  { file: "CUADROS SOFI MOSQUERA/Tr\u00edptico Mapa.jpg", slug: "triptico-mapa" },
-  { file: "CUADROS SOFI MOSQUERA/NACIMIENTO (1).jpg", slug: "nacimiento-2" },
-  { file: "CUADROS SOFI MOSQUERA/MUSIC.png", slug: "music" },
+  { file: "CUADROS SOFI MOSQUERA/Tríptico Mapa.jpg", slug: "triptico-mapa" },
 ];
 
 async function uploadFile(filePath: string, publicId: string): Promise<string> {

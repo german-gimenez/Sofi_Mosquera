@@ -37,9 +37,10 @@ export default async function ArtworksListPage() {
             {allArtworks.map((artwork) => (
               <tr key={artwork.id} className="border-b border-brand-crema hover:bg-brand-crema/50 transition-colors">
                 <td className="py-4">
-                  <Link href={`/obras/${artwork.id}`} className="text-sm hover:underline">
-                    {artwork.title}
-                  </Link>
+                  <span className="text-sm">{artwork.title}</span>
+                  <span className="block text-xs text-brand-gris-nav">
+                    {artwork.slug}
+                  </span>
                 </td>
                 <td className="py-4 text-sm text-brand-gris-nav">{artwork.series ?? "—"}</td>
                 <td className="py-4">

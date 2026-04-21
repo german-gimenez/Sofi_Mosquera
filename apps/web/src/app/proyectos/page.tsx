@@ -69,7 +69,7 @@ export default async function ProyectosPage() {
                     {project.title}
                   </h3>
                   <p className="font-body text-sm font-light text-brand-gris-nav mt-1">
-                    {project.location} \u00b7 {project.year}
+                    {project.location} · {project.year}
                   </p>
                 </Link>
               </SectionReveal>
@@ -117,7 +117,7 @@ export default async function ProyectosPage() {
                     {project.title}
                   </h3>
                   <p className="font-body text-xs font-light text-brand-gris-nav mt-1">
-                    {project.location} \u00b7 {project.year}
+                    {project.location} · {project.year}
                   </p>
                 </Link>
               </SectionReveal>
@@ -129,7 +129,7 @@ export default async function ProyectosPage() {
       {allProjects.length === 0 && (
         <div className="text-center py-20 max-w-7xl mx-auto px-6">
           <p className="font-body text-brand-gris-nav">
-            Proximamente \u2014 estamos preparando el portfolio.
+            Proximamente — estamos preparando el portfolio.
           </p>
         </div>
       )}

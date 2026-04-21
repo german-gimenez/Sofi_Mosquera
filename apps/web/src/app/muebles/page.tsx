@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Muebles a Medida",
   description:
-    "Muebles disen\u0303ados y fabricados a medida. Piezas unicas con materiales nobles y terminaciones premium.",
+    "Muebles diseñados y fabricados a medida. Piezas unicas con materiales nobles y terminaciones premium.",
 };
 
 export default async function MueblesPage() {
@@ -30,7 +30,7 @@ export default async function MueblesPage() {
             Muebles a Medida
           </h1>
           <p className="font-body font-light text-brand-negro-suave mt-4 max-w-2xl text-lg leading-relaxed">
-            Piezas disen\u0303adas y fabricadas para cada proyecto. Materiales nobles,
+            Piezas diseñadas y fabricadas para cada proyecto. Materiales nobles,
             terminaciones premium, pensados para durar.
           </p>
         </SectionReveal>
@@ -86,12 +86,12 @@ export default async function MueblesPage() {
                 Proximamente en el catalogo
               </h3>
               <p className="font-body text-brand-gris-nav mb-6 max-w-xl mx-auto">
-                Mientras tanto, disen\u0303amos y fabricamos muebles a medida para cada
+                Mientras tanto, diseñamos y fabricamos muebles a medida para cada
                 proyecto. Consultanos por tu pieza ideal.
               </p>
               <WhatsAppCTA
                 label="Consultar mueble a medida"
-                message="Hola Sofia, me interesa disen\u0303ar un mueble a medida."
+                message="Hola Sofia, me interesa diseñar un mueble a medida."
               />
             </div>
           </SectionReveal>
@@ -111,7 +111,7 @@ export default async function MueblesPage() {
               </p>
               <WhatsAppCTA
                 label="Consultar mueble personalizado"
-                message="Hola Sofia, me interesa disen\u0303ar un mueble a medida para mi espacio."
+                message="Hola Sofia, me interesa diseñar un mueble a medida para mi espacio."
               />
             </div>
           </SectionReveal>

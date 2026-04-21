@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import { cldHero } from "@sofi/ui";
+import { cldHero, cldSrcSet } from "@sofi/ui";
 
 interface HeroParallaxProps {
   coverPublicId?: string;
@@ -14,9 +14,9 @@ interface HeroParallaxProps {
 
 export function HeroParallax({
   coverPublicId,
-  eyebrow = "SM Studio \u00b7 Mendoza, Argentina",
+  eyebrow = "SM Studio · Mendoza, Argentina",
   headline = "Espacios que reflejan tu esencia",
-  subheadline = "Interiorismo, arte original y muebles a medida. No decoramos \u2014 habitamos.",
+  subheadline = "Interiorismo, arte original y muebles a medida. No decoramos — habitamos.",
 }: HeroParallaxProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -58,6 +58,12 @@ export function HeroParallax({
           <>
             <img
               src={cldHero(coverPublicId)}
+              srcSet={cldSrcSet(coverPublicId, [800, 1200, 1600, 2000, 2560], {
+                h: 1200,
+                crop: "fill",
+                g: "auto",
+              })}
+              sizes="100vw"
               alt=""
               className="w-full h-full object-cover"
               loading="eager"
