@@ -94,6 +94,7 @@ async function uploadFile(
   const result = await cloudinary.uploader.upload(filePath, {
     public_id: publicId,
     overwrite: true,
+    invalidate: true, // purge CDN cache for this public_id
     resource_type: "image",
     eager,
     eager_async: false,

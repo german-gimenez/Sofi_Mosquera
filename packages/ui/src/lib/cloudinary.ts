@@ -6,6 +6,13 @@ const CLOUD_NAME =
 const BASE_IMAGE = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
 const BASE_VIDEO = `https://res.cloudinary.com/${CLOUD_NAME}/video/upload`;
 
+/**
+ * Global asset version. Bumping this invalidates browser/CDN caches for all
+ * Cloudinary URLs because it becomes part of the URL path (v{version}/...).
+ * Increment whenever content is re-uploaded at the same public_id.
+ */
+const ASSET_VERSION = process.env.NEXT_PUBLIC_ASSETS_VERSION || "20260421";
+
 /** Video poster prefix — stored public_ids starting with this are video assets
  *  and will be rendered as image thumbnails using Cloudinary's video→image pipeline. */
 const VIDEO_PREFIX = "video:";
@@ -86,7 +93,7 @@ export function cldUrl(
   if (effect) parts.push(`e_${effect}`);
   if (raw) parts.push(raw);
 
-  return `${base}/${parts.join(",")}/${publicId}`;
+  return `${base}/${parts.join(",")}/v${ASSET_VERSION}/${publicId}`;
 }
 
 /** Preset: thumbnail 600x750 (4:5) crop fill */
@@ -177,5 +184,5 @@ export function cldVideoUrl(
   const id = publicId.startsWith("video:") ? publicId.slice("video:".length) : publicId;
   const { w = 1600, q = "auto" } = opts;
   const parts = [`f_mp4`, `q_${q}`, `w_${w}`, "c_limit"];
-  return `${BASE_VIDEO}/${parts.join(",")}/${id}.mp4`;
+  return `${BASE_VIDEO}/${parts.join(",")}/v${ASSET_VERSION}/${id}.mp4`;
 }
