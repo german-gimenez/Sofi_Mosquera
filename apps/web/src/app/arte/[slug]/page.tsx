@@ -3,6 +3,10 @@ import Link from "next/link";
 import { createDb, artworks, eq, and, ne, desc } from "@sofi/db";
 import { SectionReveal, WhatsAppCTA, artworkMessage, cldArtwork } from "@sofi/ui";
 import { ArtworkLightbox } from "@/components/artwork-lightbox";
+import {
+  artworkVisualArtworkSchema,
+  jsonLdScript,
+} from "@/lib/structured-data";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -50,8 +54,24 @@ export default async function ArtworkPage({ params }: Props) {
         .limit(3)
     : [];
 
+  const schema = artworkVisualArtworkSchema({
+    title: artwork.title,
+    slug: artwork.slug,
+    technique: artwork.technique,
+    year: artwork.year,
+    widthCm: artwork.widthCm,
+    heightCm: artwork.heightCm,
+    priceArs: artwork.priceArs,
+    status: artwork.status,
+    coverImageUrl: artwork.coverUrl ? cldArtwork(artwork.coverUrl) : null,
+  });
+
   return (
     <div className="pt-28">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(schema)}
+      />
       <div className="max-w-6xl mx-auto px-6">
         <SectionReveal>
           <div className="grid md:grid-cols-2 gap-12 items-start">

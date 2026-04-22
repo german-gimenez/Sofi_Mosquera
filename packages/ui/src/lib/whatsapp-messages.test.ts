@@ -21,6 +21,7 @@ describe("whatsapp-messages constants", () => {
       "asesoria",
       "contacto",
       "sobre",
+      "studio",
       "interiorismo",
       "arte-index",
       "muebles-index",
@@ -73,10 +74,10 @@ describe("furnitureMessage", () => {
 });
 
 describe("projectMessage", () => {
-  it("references the project title", () => {
+  it("references the project title and asks for more info", () => {
     const result = projectMessage("Casa Laura");
-    expect(result).toContain('"Casa Laura"');
-    expect(result).toContain("similar");
+    expect(result).toContain("Casa Laura");
+    expect(result).toMatch(/saber m[aá]s/i);
   });
 });
 
@@ -89,6 +90,8 @@ describe("messageForPath", () => {
     expect(messageForPath("/asesoria")).toBe(WHATSAPP_MESSAGES.asesoria);
     expect(messageForPath("/contacto")).toBe(WHATSAPP_MESSAGES.contacto);
     expect(messageForPath("/sobre")).toBe(WHATSAPP_MESSAGES.sobre);
+    expect(messageForPath("/studio")).toBe(WHATSAPP_MESSAGES.studio);
+    expect(messageForPath("/studio#proceso")).toBe(WHATSAPP_MESSAGES.studio);
     expect(messageForPath("/interiorismo")).toBe(
       WHATSAPP_MESSAGES.interiorismo
     );

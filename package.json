@@ -5,6 +5,8 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
+    "test": "pnpm --filter @sofi/ui test && tsx packages/tokens/src/tokens.test.ts && tsx apps/web/src/lib/structured-data.test.ts && tsx scripts/audit-v2-redesign.ts",
+    "audit:v2": "tsx scripts/audit-v2-redesign.ts",
     "db:push": "turbo db:push --filter=@sofi/db",
     "db:seed": "turbo db:seed --filter=@sofi/db",
     "clean": "turbo clean"

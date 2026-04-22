@@ -21,6 +21,16 @@ const nextConfig: NextConfig = {
         destination: "/arte",
         permanent: true,
       },
+      {
+        source: "/sobre",
+        destination: "/studio",
+        permanent: true,
+      },
+      {
+        source: "/asesoria",
+        destination: "/studio#proceso",
+        permanent: true,
+      },
     ];
   },
 };

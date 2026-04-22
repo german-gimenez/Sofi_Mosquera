@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SectionReveal, cldArtwork } from "@sofi/ui";
+import { SectionReveal, cldArtwork, cldSrcSet } from "@sofi/ui";
 import { createDb, artworks, desc } from "@sofi/db";
 import { ArtworkTilt } from "@/components/artwork-tilt";
 import type { Metadata } from "next";
@@ -20,99 +20,81 @@ export default async function ArtePage() {
     .from(artworks)
     .orderBy(desc(artworks.featured), desc(artworks.publishedAt));
 
-  const series = Array.from(new Set(allArtworks.map((a) => a.series).filter(Boolean))) as string[];
-
   return (
-    <div className="pt-28">
-      <section className="max-w-7xl mx-auto px-6 pb-12">
-        <SectionReveal>
-          <span className="font-body text-[10px] font-medium tracking-[0.35em] uppercase text-brand-gris-nav">
-            Galeria
-          </span>
-          <h1 className="font-heading text-5xl md:text-6xl mt-4 text-brand-negro">
-            Arte Original
-          </h1>
-          <p className="font-body font-light text-brand-negro-suave mt-4 max-w-2xl text-lg leading-relaxed">
-            Cada pieza nace de la misma sensibilidad con la que diseñamos
-            espacios. Arte que no decora — transforma.
-          </p>
-        </SectionReveal>
+    <div className="pt-24 md:pt-28">
+      <section className="max-w-[1440px] mx-auto px-6 pt-6 pb-4">
+        <span className="font-body text-[10px] font-medium tracking-[0.35em] uppercase text-brand-gris-nav">
+          Arte
+        </span>
       </section>
 
-      {series.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 pb-12">
-          <SectionReveal>
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="font-body text-[9px] tracking-[0.3em] uppercase text-brand-gris-nav mr-3">
-                Series disponibles:
-              </span>
-              {series.map((s) => (
-                <span
-                  key={s}
-                  className="font-body text-xs px-3 py-1 bg-brand-crema rounded-pill text-brand-negro"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </SectionReveal>
-        </section>
-      )}
-
-      <section className="max-w-7xl mx-auto px-6 pb-24">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {allArtworks.map((artwork, i) => (
-            <SectionReveal key={artwork.id} delay={i * 60}>
-              <Link href={`/arte/${artwork.slug}`} className="group block">
-                <ArtworkTilt>
-                  <div className="aspect-[3/4] bg-brand-crema rounded-image overflow-hidden">
-                    {artwork.coverUrl ? (
-                      <img
-                        src={cldArtwork(artwork.coverUrl)}
-                        alt={artwork.title}
-                        className="w-full h-full object-cover"
-                        loading={i < 3 ? "eager" : "lazy"}
-                      />
-                    ) : (
-                      <div
-                        className="w-full h-full flex items-center justify-center"
-                        role="img"
-                        aria-label={artwork.title}
-                      >
-                        <span className="font-heading text-5xl text-brand-gris-border/40">
-                          {artwork.title.charAt(0)}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </ArtworkTilt>
-                <div className="mt-3">
-                  <h3 className="font-heading text-lg text-brand-negro group-hover:text-brand-gris-nav transition-colors">
-                    {artwork.title}
-                  </h3>
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
-                    {artwork.series && (
-                      <span className="font-body text-xs text-brand-gris-nav">
-                        {artwork.series}
-                      </span>
-                    )}
-                    {artwork.status === "vendido" && (
-                      <span className="font-body text-[9px] tracking-wider uppercase bg-brand-negro text-brand-blanco-calido px-2 py-0.5 rounded-pill">
-                        Vendido
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            </SectionReveal>
-          ))}
-        </div>
-
-        {allArtworks.length === 0 && (
-          <div className="text-center py-20">
+      <section className="max-w-[1440px] mx-auto px-6 pb-16 md:pb-[120px]">
+        {allArtworks.length === 0 ? (
+          <div className="py-20 text-center">
             <p className="font-body text-brand-gris-nav">
               Proximamente — estamos preparando la galeria.
             </p>
+          </div>
+        ) : (
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
+            {allArtworks.map((artwork, i) => {
+              const dim =
+                artwork.widthCm && artwork.heightCm
+                  ? `${artwork.widthCm}x${artwork.heightCm} cm`
+                  : null;
+              return (
+                <SectionReveal key={artwork.id} delay={i * 40}>
+                  <Link
+                    href={`/arte/${artwork.slug}`}
+                    className="group mb-4 block break-inside-avoid"
+                  >
+                    <ArtworkTilt>
+                      <div className="aspect-[3/4] bg-brand-crema rounded-image overflow-hidden relative">
+                        {artwork.coverUrl ? (
+                          <img
+                            src={cldArtwork(artwork.coverUrl)}
+                            srcSet={cldSrcSet(artwork.coverUrl, [480, 768, 1200, 1920], {
+                              h: 2560,
+                              crop: "fit",
+                            })}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            alt={artwork.title}
+                            className="w-full h-full object-cover"
+                            loading={i < 3 ? "eager" : "lazy"}
+                            decoding="async"
+                          />
+                        ) : (
+                          <div
+                            className="w-full h-full flex items-center justify-center"
+                            role="img"
+                            aria-label={artwork.title}
+                          >
+                            <span className="font-heading text-5xl text-brand-gris-border/40">
+                              {artwork.title.charAt(0)}
+                            </span>
+                          </div>
+                        )}
+                        {artwork.status === "vendido" && (
+                          <span className="absolute top-3 right-3 font-body text-[9px] tracking-wider uppercase bg-brand-negro text-brand-blanco-calido px-2 py-0.5 rounded-pill">
+                            Vendido
+                          </span>
+                        )}
+                      </div>
+                    </ArtworkTilt>
+                    <div className="mt-3">
+                      <h3 className="font-heading text-lg text-brand-negro group-hover:text-brand-gris-nav transition-colors">
+                        {artwork.title}
+                      </h3>
+                      {dim && (
+                        <p className="font-body text-xs text-brand-gris-nav mt-0.5">
+                          {dim}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                </SectionReveal>
+              );
+            })}
           </div>
         )}
       </section>

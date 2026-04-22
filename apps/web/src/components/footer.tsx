@@ -2,18 +2,17 @@ import Link from "next/link";
 
 const footerLinks = [
   {
-    title: "Servicios",
+    title: "Portfolio",
     links: [
-      { label: "Interiorismo", href: "/interiorismo" },
-      { label: "Asesoría", href: "/asesoria" },
-      { label: "Muebles", href: "/muebles" },
+      { label: "Proyectos", href: "/proyectos" },
       { label: "Arte", href: "/arte" },
+      { label: "Muebles", href: "/muebles" },
     ],
   },
   {
-    title: "Sobre",
+    title: "Studio",
     links: [
-      { label: "Sobre SM", href: "/sobre" },
+      { label: "Sobre el estudio", href: "/studio" },
       { label: "Contacto", href: "/contacto" },
     ],
   },
@@ -29,21 +28,19 @@ const footerLinks = [
 export function Footer() {
   return (
     <footer className="bg-brand-negro text-brand-blanco-calido mt-24">
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="max-w-[1440px] mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
-          {/* Brand */}
           <div>
             <span className="font-heading text-3xl">SM</span>
             <p className="font-body font-light text-sm text-brand-gris-nav mt-4 leading-relaxed">
-              Estudio de interiorismo, arte y muebles a medida. Diseñamos
-              espacios que reflejan tu esencia.
+              Interiorismo, arte original y muebles a medida. Un único proceso
+              creativo.
             </p>
             <p className="font-body text-xs text-brand-gris-nav mt-4 tracking-wider uppercase">
-              Mendoza, Argentina
+              Mendoza · Santiago
             </p>
           </div>
 
-          {/* Link columns */}
           {footerLinks.map((group) => (
             <div key={group.title}>
               <h4 className="font-body text-[10px] font-medium tracking-[0.3em] uppercase text-brand-gris-nav mb-6">
@@ -68,13 +65,12 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
         <div className="border-t border-brand-blanco-calido/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-body text-xs text-brand-gris-nav/50">
-            &copy; {new Date().getFullYear()} Sofia Mosquera. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} Sofía Mosquera. Todos los derechos reservados.
           </p>
           <p className="font-body text-xs text-brand-gris-nav/30 tracking-wider uppercase">
-            &ldquo;Espacios que reflejan tu esencia&rdquo;
+            No decoramos. Habitamos.
           </p>
         </div>
       </div>

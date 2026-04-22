@@ -6,6 +6,7 @@ export type WhatsAppContext =
   | "asesoria"
   | "contacto"
   | "sobre"
+  | "studio"
   | "interiorismo"
   | "arte-index"
   | "muebles-index"
@@ -23,6 +24,8 @@ export const WHATSAPP_MESSAGES: Record<WhatsAppContext, string> = {
     "Hola Sofi! Te escribo desde la página de Contacto. Me interesa consultar sobre [interiorismo / una obra / un mueble].",
   sobre:
     "Hola Sofi! Leí tu historia y me gustaría conversar sobre un proyecto.",
+  studio:
+    "Hola Sofi! Conocí tu estudio y me gustaría coordinar la primera asesoría para mi espacio.",
   interiorismo:
     "Hola Sofi! Vi tu trabajo de interiorismo y quiero coordinar una asesoría para mi espacio.",
   "arte-index":
@@ -47,7 +50,7 @@ export function furnitureMessage(title: string): string {
 }
 
 export function projectMessage(title: string): string {
-  return `Hola Sofi! Vi el proyecto "${title}" y me encantaría conversar sobre algo similar para mi espacio.`;
+  return `Hola Sofía, vi el proyecto ${title} y me interesa saber más.`;
 }
 
 export function messageForPath(pathname: string): string {
@@ -55,6 +58,8 @@ export function messageForPath(pathname: string): string {
   if (pathname === "/asesoria") return WHATSAPP_MESSAGES.asesoria;
   if (pathname === "/contacto") return WHATSAPP_MESSAGES.contacto;
   if (pathname === "/sobre") return WHATSAPP_MESSAGES.sobre;
+  if (pathname === "/studio" || pathname.startsWith("/studio"))
+    return WHATSAPP_MESSAGES.studio;
   if (pathname === "/interiorismo") return WHATSAPP_MESSAGES.interiorismo;
   if (pathname === "/arte") return WHATSAPP_MESSAGES["arte-index"];
   if (pathname === "/muebles") return WHATSAPP_MESSAGES["muebles-index"];

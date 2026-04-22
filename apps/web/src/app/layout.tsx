@@ -4,6 +4,11 @@ import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { FloatingWhatsApp } from "@/components/floating-whatsapp";
+import {
+  organizationSchema,
+  localBusinessSchema,
+  jsonLdScript,
+} from "@/lib/structured-data";
 
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
@@ -32,7 +37,7 @@ export const metadata: Metadata = {
     template: "%s | Sofia Mosquera",
   },
   description:
-    "Diseñamos espacios que reflejan tu esencia. Interiorismo, arte original y muebles a medida en Mendoza, Argentina.",
+    "Estudio de interiorismo, arte original y muebles a medida en Mendoza y Santiago. Portfolio de proyectos que integran diseño, arte y piezas únicas.",
   keywords: [
     "interiorismo",
     "diseño de interiores",
@@ -60,7 +65,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Sofia Mosquera — Interiorismo · Arte · Muebles a medida",
     description:
-      "Diseñamos espacios que reflejan tu esencia. Interiorismo, arte original y muebles a medida.",
+      "Estudio de interiorismo, arte original y muebles a medida en Mendoza y Santiago.",
     images: [OG_IMAGE],
   },
 };
@@ -72,6 +77,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={`${instrumentSerif.variable} ${jost.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(organizationSchema())}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(localBusinessSchema())}
+        />
+      </head>
       <body className="antialiased">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand-negro focus:text-brand-blanco-calido focus:px-4 focus:py-2 focus:rounded-[8px]">
           Ir al contenido principal
