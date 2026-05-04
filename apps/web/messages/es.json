@@ -1,0 +1,138 @@
+{
+  "nav": {
+    "inicio": "Inicio",
+    "proyectos": "Proyectos",
+    "estudio": "Estudio",
+    "servicios": "Servicios",
+    "muebles": "Muebles",
+    "arte": "Arte",
+    "contacto": "Contacto",
+    "skipToContent": "Ir al contenido principal",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "whatsapp": "Escribir por WhatsApp",
+    "homeLabel": "Sofía Mosquera — inicio"
+  },
+  "home": {
+    "heroEyebrow": "Espacio diseñado por Sofía Mosquera Estudio",
+    "heroHeadline": "SM Studio",
+    "heroBody": "El espacio donde vivís y trabajás dice algo sobre vos. En SM Studio creamos experiencias de espacio: diseñamos el interiorismo, fabricamos los muebles y creamos las obras de arte —todo desde la misma visión.",
+    "artFeaturedEyebrow": "Galería",
+    "artFeaturedTitle": "Arte original de Sofía Mosquera",
+    "artFeaturedSubtitle": "Obras únicas, firmadas, con certificado de autenticidad.",
+    "artFeaturedCTA": "Ver galería completa",
+    "projectsTitle": "Proyectos",
+    "projectsCTA": "Ver todos los proyectos",
+    "featuredSeriesEyebrow": "Serie destacada",
+    "featuredSeriesCTA": "Explorar serie",
+    "manifestoEyebrow": "Manifesto",
+    "manifestoTitle": "Una sola mano, una sola visión",
+    "manifestoBody1": "A diferencia de otros estudios, integramos diseño de espacio, muebles a medida y arte original en un único proceso creativo. Creemos que un espacio verdaderamente único no puede diseñarse por partes.",
+    "manifestoBody2": "El espacio, los muebles y las obras que lo habitan nacen de la misma visión y de la misma mano.",
+    "newsletterTitle": "Lista de coleccionistas",
+    "newsletterBody": "Recibí avisos de nuevas obras y series antes que nadie.",
+    "newsletterPlaceholder": "tu@email.com",
+    "newsletterCTA": "Sumarme",
+    "newsletterSuccess": "¡Gracias! Te avisamos cuando salga la próxima serie.",
+    "newsletterError": "Algo salió mal. Probá de nuevo."
+  },
+  "proyectos": {
+    "title": "Proyectos",
+    "back": "← Volver a proyectos",
+    "year": "Año",
+    "location": "Ubicación",
+    "intervention": "Intervención",
+    "concept": "Concepto",
+    "description": "Descripción",
+    "next": "Siguiente proyecto"
+  },
+  "estudio": {
+    "title": "Estudio",
+    "team": "El equipo",
+    "ctaProyectos": "Proyectos →",
+    "ctaContacto": "Contacto →"
+  },
+  "servicios": {
+    "title": "Servicios",
+    "01title": "Intervención arquitectónica en etapa de obra",
+    "01body": "Participación durante el proceso constructivo, con incidencia en decisiones espaciales y arquitectónicas que optimizan funcionalidad, coherencia material y adecuación del espacio a la forma de vida de sus usuarios.",
+    "02title": "Interiorismo integral con dirección",
+    "02body": "Desarrollo conceptual y técnico completo una vez definida la arquitectura. Incluye diseño de mobiliario específico para cada espacio, definición de materialidad, iluminación, equipamiento y seguimiento de ejecución.",
+    "03title": "Diseño y producción de mobiliario",
+    "03body": "Desarrollo de piezas y sistemas a medida, panelados, bibliotecas y equipamientos específicos, coordinando fabricación e instalación.",
+    "04title": "Styling",
+    "04body": "Selección y provisión de textiles, objetos, iluminación decorativa y elementos complementarios, garantizando coherencia estética y puesta en funcionamiento final del espacio."
+  },
+  "muebles": {
+    "title": "Muebles",
+    "tagline": "Cada pieza nace del espacio que va a habitar. Diseñada, fabricada e instalada por el estudio.",
+    "comingSoon": "Próximamente catálogo de muebles disponibles para venta.",
+    "consultCTA": "Consultá un mueble a medida"
+  },
+  "arte": {
+    "title": "Arte",
+    "intro": "El arte como camino para descifrar el interior. Cuatro series donde cada lienzo es una radiografía del presente —emociones, mapas, movimiento y solidez— plasmada en color y materia.",
+    "series": "Series",
+    "obras": "obras",
+    "available": "Disponible",
+    "reserved": "Reservado",
+    "sold": "Vendido",
+    "inquire": "Consultar",
+    "buyCTA": "Quiero esta obra",
+    "filterAvailable": "Disponibles",
+    "filterAll": "Todas",
+    "sortRecent": "Recientes",
+    "sortPriceAsc": "Precio: menor a mayor",
+    "sortPriceDesc": "Precio: mayor a menor",
+    "back": "← Volver",
+    "details": {
+      "certificate": "Certificado de autenticidad",
+      "shipping": "Envío Argentina e internacional",
+      "payment": "Formas de pago",
+      "delivery": "Tiempo de entrega",
+      "technique": "Técnica",
+      "dimensions": "Dimensiones",
+      "year": "Año",
+      "serie": "Serie"
+    },
+    "otrasObras": "Otras obras de la serie"
+  },
+  "contacto": {
+    "title": "Contacto",
+    "intro": "Hablemos de tu próximo proyecto.",
+    "address": "Dirección",
+    "addressValue": "Besares 271B, Chacras de Coria\nLuján de Cuyo, Mendoza, Argentina",
+    "email": "Email",
+    "phone": "Teléfono",
+    "instagram": "Instagram",
+    "openMaps": "Abrir en Google Maps →",
+    "form": {
+      "name": "Nombre",
+      "email": "Email",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "submit": "Enviar",
+      "submitting": "Enviando…",
+      "success": "Gracias. Te respondemos a la brevedad.",
+      "error": "Algo salió mal. Probá de nuevo o escribinos por WhatsApp."
+    }
+  },
+  "footer": {
+    "studio": "Sofía Mosquera Estudio",
+    "rights": "Todos los derechos reservados.",
+    "tagline": "No decoramos. Habitamos."
+  },
+  "cta": {
+    "whatsapp": "Coordiná tu asesoría",
+    "whatsappFloating": "Escribinos"
+  },
+  "meta": {
+    "siteTitle": "Sofía Mosquera — Interiorismo · Arte · Muebles a medida",
+    "siteDescription": "Estudio de interiorismo, arte original y muebles a medida en Mendoza y Santiago. Portfolio de proyectos que integran diseño, arte y piezas únicas."
+  },
+  "languageSwitcher": {
+    "es": "ES",
+    "en": "EN",
+    "label": "Cambiar idioma"
+  }
+}

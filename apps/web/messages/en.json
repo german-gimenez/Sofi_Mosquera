@@ -1,0 +1,138 @@
+{
+  "nav": {
+    "inicio": "Home",
+    "proyectos": "Projects",
+    "estudio": "Studio",
+    "servicios": "Services",
+    "muebles": "Furniture",
+    "arte": "Art",
+    "contacto": "Contact",
+    "skipToContent": "Skip to main content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "whatsapp": "Contact via WhatsApp",
+    "homeLabel": "Sofía Mosquera — home"
+  },
+  "home": {
+    "heroEyebrow": "Space designed by Sofía Mosquera Studio",
+    "heroHeadline": "SM Studio",
+    "heroBody": "The space where you live and work says something about you. At SM Studio we create space experiences: we design the interior, build the furniture and create the artworks —all from the same vision.",
+    "artFeaturedEyebrow": "Gallery",
+    "artFeaturedTitle": "Original art by Sofía Mosquera",
+    "artFeaturedSubtitle": "Unique signed pieces, with certificate of authenticity.",
+    "artFeaturedCTA": "View full gallery",
+    "projectsTitle": "Projects",
+    "projectsCTA": "View all projects",
+    "featuredSeriesEyebrow": "Featured series",
+    "featuredSeriesCTA": "Explore series",
+    "manifestoEyebrow": "Manifesto",
+    "manifestoTitle": "One hand, one vision",
+    "manifestoBody1": "Unlike other studios, we integrate space design, custom furniture and original art in a single creative process. We believe a truly unique space cannot be designed in parts.",
+    "manifestoBody2": "The space, the furniture and the works that inhabit it are born from the same vision and the same hand.",
+    "newsletterTitle": "Collectors list",
+    "newsletterBody": "Get notified about new artworks and series before anyone else.",
+    "newsletterPlaceholder": "your@email.com",
+    "newsletterCTA": "Join",
+    "newsletterSuccess": "Thanks! We'll let you know when the next series drops.",
+    "newsletterError": "Something went wrong. Please try again."
+  },
+  "proyectos": {
+    "title": "Projects",
+    "back": "← Back to projects",
+    "year": "Year",
+    "location": "Location",
+    "intervention": "Intervention",
+    "concept": "Concept",
+    "description": "Description",
+    "next": "Next project"
+  },
+  "estudio": {
+    "title": "Studio",
+    "team": "The team",
+    "ctaProyectos": "Projects →",
+    "ctaContacto": "Contact →"
+  },
+  "servicios": {
+    "title": "Services",
+    "01title": "Architectural intervention during construction",
+    "01body": "Participation during the construction process, with input on spatial and architectural decisions that optimize functionality, material coherence and adaptation of the space to the lifestyle of its users.",
+    "02title": "Full interior design with direction",
+    "02body": "Complete conceptual and technical development once architecture is defined. Includes furniture design specific to each space, materiality, lighting, equipment and execution oversight.",
+    "03title": "Furniture design and production",
+    "03body": "Development of custom pieces and systems, panelling, libraries and specific equipment, coordinating fabrication and installation.",
+    "04title": "Styling",
+    "04body": "Selection and provision of textiles, objects, decorative lighting and complementary elements, ensuring aesthetic coherence and final commissioning of the space."
+  },
+  "muebles": {
+    "title": "Furniture",
+    "tagline": "Each piece is born from the space it will inhabit. Designed, built and installed by the studio.",
+    "comingSoon": "Catalogue of furniture available for sale coming soon.",
+    "consultCTA": "Inquire about a custom piece"
+  },
+  "arte": {
+    "title": "Art",
+    "intro": "Art as a path to decipher the interior. Four series where each canvas is a radiography of the present —emotions, maps, movement and solidity— captured in color and matter.",
+    "series": "Series",
+    "obras": "works",
+    "available": "Available",
+    "reserved": "Reserved",
+    "sold": "Sold",
+    "inquire": "Inquire",
+    "buyCTA": "I want this piece",
+    "filterAvailable": "Available",
+    "filterAll": "All",
+    "sortRecent": "Recent",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "back": "← Back",
+    "details": {
+      "certificate": "Certificate of authenticity",
+      "shipping": "Shipping in Argentina and international",
+      "payment": "Payment methods",
+      "delivery": "Delivery time",
+      "technique": "Technique",
+      "dimensions": "Dimensions",
+      "year": "Year",
+      "serie": "Series"
+    },
+    "otrasObras": "Other works in the series"
+  },
+  "contacto": {
+    "title": "Contact",
+    "intro": "Let's talk about your next project.",
+    "address": "Address",
+    "addressValue": "Besares 271B, Chacras de Coria\nLuján de Cuyo, Mendoza, Argentina",
+    "email": "Email",
+    "phone": "Phone",
+    "instagram": "Instagram",
+    "openMaps": "Open in Google Maps →",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send",
+      "submitting": "Sending…",
+      "success": "Thanks. We'll get back to you shortly.",
+      "error": "Something went wrong. Try again or message us on WhatsApp."
+    }
+  },
+  "footer": {
+    "studio": "Sofía Mosquera Studio",
+    "rights": "All rights reserved.",
+    "tagline": "We don't decorate. We inhabit."
+  },
+  "cta": {
+    "whatsapp": "Book a consultation",
+    "whatsappFloating": "Message us"
+  },
+  "meta": {
+    "siteTitle": "Sofía Mosquera — Interior Design · Art · Custom Furniture",
+    "siteDescription": "Studio of interior design, original art and custom furniture in Mendoza and Santiago. Portfolio of projects integrating design, art and unique pieces."
+  },
+  "languageSwitcher": {
+    "es": "ES",
+    "en": "EN",
+    "label": "Switch language"
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { useEffect, useState } from "react";
 import {
   WHATSAPP_MESSAGES,
@@ -9,19 +9,21 @@ import {
   cn,
   messageForPath,
 } from "@sofi/ui";
+import { Logo } from "./logo";
+import { LocaleSwitcher } from "./locale-switcher";
 
 export const NAV_LINKS = [
-  { href: "/proyectos", label: "PROYECTOS" },
-  { href: "/arte", label: "ARTE" },
-  { href: "/muebles", label: "MUEBLES" },
-  { href: "/studio", label: "STUDIO" },
-  { href: "/contacto", label: "CONTACTO" },
+  { href: "/", labelKey: "inicio" as const },
+  { href: "/proyectos", labelKey: "proyectos" as const },
+  { href: "/estudio", labelKey: "estudio" as const },
+  { href: "/servicios", labelKey: "servicios" as const },
+  { href: "/muebles", labelKey: "muebles" as const },
+  { href: "/arte", labelKey: "arte" as const },
+  { href: "/contacto", labelKey: "contacto" as const },
 ] as const;
 
-const links = NAV_LINKS;
-
 function isActive(pathname: string, href: string): boolean {
-  if (href === "/") return pathname === "/";
+  if (href === "/") return pathname === "/" || pathname === "";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -42,6 +44,8 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 export function Nav() {
+  const t = useTranslations("nav");
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -68,7 +72,9 @@ export function Nav() {
     };
   }, [open]);
 
-  const waMessage = messageForPath(pathname ?? "/") ?? WHATSAPP_MESSAGES.default;
+  const waMessage =
+    messageForPath(`/${locale}${pathname === "/" ? "" : pathname}`) ??
+    WHATSAPP_MESSAGES.default;
   const waUrl = buildWhatsAppUrl(waMessage);
 
   return (
@@ -77,25 +83,28 @@ export function Nav() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           scrolled
-            ? "bg-brand-blanco-calido/90 backdrop-blur-md border-b border-brand-crema/70"
+            ? "bg-brand-blanco-calido/92 backdrop-blur-md border-b border-brand-crema/70"
             : "bg-transparent"
         )}
       >
         <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 py-4 md:py-5">
           <Link
             href="/"
-            aria-label="Sofia Mosquera — inicio"
-            className={cn(
-              "font-heading leading-none text-[26px] md:text-[30px] transition-colors",
-              scrolled ? "text-brand-negro" : "text-brand-blanco-calido"
-            )}
+            aria-label={t("homeLabel")}
+            className="flex items-center"
           >
-            SM
+            <Logo
+              variant={scrolled ? "sm-dark" : "sm-white"}
+              width={42}
+              height={42}
+              priority
+              alt={t("homeLabel")}
+            />
           </Link>
 
           <nav aria-label="Principal" className="hidden md:block">
-            <ul className="flex items-center gap-7">
-              {links.map((link) => {
+            <ul className="flex items-center gap-6 lg:gap-7">
+              {NAV_LINKS.map((link) => {
                 const active = isActive(pathname ?? "", link.href);
                 return (
                   <li key={link.href}>
@@ -103,14 +112,14 @@ export function Nav() {
                       href={link.href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "nav-underline font-body text-[14px] font-light tracking-[0.1em] uppercase transition-colors",
+                        "nav-underline font-body text-[13px] font-light tracking-[0.15em] uppercase transition-colors",
                         scrolled
                           ? "text-brand-negro hover:text-brand-gris-nav"
                           : "text-brand-blanco-calido hover:text-brand-blanco-calido/80",
                         active && "nav-underline-active"
                       )}
                     >
-                      {link.label}
+                      {t(link.labelKey)}
                     </Link>
                   </li>
                 );
@@ -118,12 +127,15 @@ export function Nav() {
             </ul>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 md:gap-5">
+            <div className="hidden md:block">
+              <LocaleSwitcher scrolled={scrolled} />
+            </div>
             <a
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Escribir por WhatsApp"
+              aria-label={t("whatsapp")}
               className={cn(
                 "hidden md:inline-flex items-center justify-center transition-colors",
                 scrolled
@@ -138,7 +150,7 @@ export function Nav() {
               type="button"
               className="md:hidden p-2 -mr-2"
               onClick={() => setOpen((o) => !o)}
-              aria-label={open ? "Cerrar menu" : "Abrir menu"}
+              aria-label={open ? t("closeMenu") : t("openMenu")}
               aria-expanded={open}
               aria-controls="mobile-menu"
             >
@@ -188,19 +200,19 @@ export function Nav() {
         aria-hidden={!open}
       >
         <div className="h-full flex flex-col pt-24 px-6 pb-10">
-          <ul className="flex flex-col gap-6">
-            {links.map((link) => {
+          <ul className="flex flex-col gap-5">
+            {NAV_LINKS.map((link) => {
               const active = isActive(pathname ?? "", link.href);
               return (
                 <li key={link.href}>
                   <Link
                     href={link.href}
                     className={cn(
-                      "font-heading text-3xl leading-none tracking-wide",
+                      "font-heading text-[2.25rem] leading-none tracking-tight",
                       active ? "text-brand-negro" : "text-brand-negro/80"
                     )}
                   >
-                    {link.label}
+                    {t(link.labelKey)}
                   </Link>
                 </li>
               );
@@ -212,14 +224,12 @@ export function Nav() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-body text-sm font-light tracking-[0.1em] uppercase text-brand-negro"
+              className="inline-flex items-center gap-2 font-body text-sm font-light tracking-[0.15em] uppercase text-brand-negro"
             >
               <WhatsAppIcon className="w-4 h-4" />
               WhatsApp
             </a>
-            <span className="font-body text-[10px] tracking-[0.3em] uppercase text-brand-gris-nav">
-              Mendoza · Santiago
-            </span>
+            <LocaleSwitcher scrolled />
           </div>
         </div>
       </div>

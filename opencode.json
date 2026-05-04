@@ -1,0 +1,41 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "shell": "pwsh",
+  "instructions": [
+    "AGENTS.md",
+    ".cursor/rules/*.mdc",
+    "docs/STATE.md"
+  ],
+  "watcher": {
+    "ignore": [
+      "node_modules/**",
+      ".next/**",
+      ".turbo/**",
+      ".vercel/**",
+      "dist/**",
+      "out/**",
+      "*.tsbuildinfo",
+      "temp/**",
+      "assets/CUADROS SOFI MOSQUERA/**",
+      "assets/PAG WEB/PORTFOLIO/**",
+      "assets/Entregables/**",
+      ".opencode/cache/**",
+      ".opencode/sessions/**"
+    ]
+  },
+  "permission": {
+    "edit": "allow",
+    "bash": {
+      "*": "allow",
+      "rm -rf *": "deny",
+      "git push --force *": "ask",
+      "git push -f *": "ask",
+      "git reset --hard *": "ask",
+      "vercel rm *": "ask",
+      "vercel domains rm *": "ask",
+      "drizzle-kit drop *": "ask"
+    }
+  },
+  "formatter": true,
+  "lsp": true
+}

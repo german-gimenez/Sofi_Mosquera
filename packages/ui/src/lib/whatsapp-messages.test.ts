@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   WHATSAPP_PHONE,
   WHATSAPP_MESSAGES,
+  WHATSAPP_MESSAGES_I18N,
   artworkMessage,
   furnitureMessage,
   projectMessage,
@@ -117,6 +118,86 @@ describe("messageForPath", () => {
   it("falls back to default for unknown routes", () => {
     expect(messageForPath("/unknown")).toBe(WHATSAPP_MESSAGES.default);
     expect(messageForPath("/foo/bar/baz")).toBe(WHATSAPP_MESSAGES.default);
+  });
+});
+
+describe("bilingual messages (V3)", () => {
+  it("WHATSAPP_MESSAGES_I18N has both es + en for every context", () => {
+    for (const key of Object.keys(WHATSAPP_MESSAGES_I18N) as Array<
+      keyof typeof WHATSAPP_MESSAGES_I18N
+    >) {
+      expect(WHATSAPP_MESSAGES_I18N[key].es).toBeTruthy();
+      expect(WHATSAPP_MESSAGES_I18N[key].en).toBeTruthy();
+      expect(WHATSAPP_MESSAGES_I18N[key].es).toMatch(/^Hola Sofi!|^Hola Sofía/);
+      expect(WHATSAPP_MESSAGES_I18N[key].en).toMatch(/^Hi Sofi!|^Hi Sofía/);
+    }
+  });
+
+  it("messageForPath strips locale prefix", () => {
+    expect(messageForPath("/es/")).toBe(WHATSAPP_MESSAGES_I18N.home.es);
+    expect(messageForPath("/en/")).toBe(WHATSAPP_MESSAGES_I18N.home.en);
+    expect(messageForPath("/es/arte")).toBe(
+      WHATSAPP_MESSAGES_I18N["arte-index"].es
+    );
+    expect(messageForPath("/en/art")).toBe(
+      WHATSAPP_MESSAGES_I18N["arte-index"].en
+    );
+  });
+
+  it("messageForPath maps localized estudio/services/contact", () => {
+    expect(messageForPath("/en/studio")).toBe(WHATSAPP_MESSAGES_I18N.studio.en);
+    expect(messageForPath("/en/services")).toBe(
+      WHATSAPP_MESSAGES_I18N.servicios.en
+    );
+    expect(messageForPath("/en/contact")).toBe(
+      WHATSAPP_MESSAGES_I18N.contacto.en
+    );
+    expect(messageForPath("/en/projects/foo")).toBe(
+      WHATSAPP_MESSAGES_I18N["proyectos-index"].en
+    );
+  });
+
+  it("messageForPath honours explicit locale arg", () => {
+    expect(messageForPath("/", "en")).toBe(WHATSAPP_MESSAGES_I18N.home.en);
+    expect(messageForPath("/contacto", "en")).toBe(
+      WHATSAPP_MESSAGES_I18N.contacto.en
+    );
+  });
+});
+
+describe("artworkMessage enriched (V3)", () => {
+  it("includes dimensions when provided", () => {
+    const msg = artworkMessage("La Libertad", {
+      series: "Emociones",
+      widthCm: 80,
+      heightCm: 100,
+      technique: "Acrílico sobre lienzo",
+      priceArs: 300000,
+    });
+    expect(msg).toContain("La Libertad");
+    expect(msg).toContain("Emociones");
+    expect(msg).toContain("80×100 cm");
+    expect(msg).toContain("Acrílico sobre lienzo");
+    expect(msg).toContain("$300.000");
+  });
+
+  it("supports english locale", () => {
+    const msg = artworkMessage("Mountains", {
+      series: "Emociones",
+      widthCm: 60,
+      heightCm: 50,
+      locale: "en",
+    });
+    expect(msg).toMatch(/^Hi Sofi!/);
+    expect(msg).toContain("Mountains");
+    expect(msg).toContain("from the Emociones series");
+    expect(msg).toContain("60×50 cm");
+  });
+
+  it("backward compatible with old (title, series) signature", () => {
+    const msg = artworkMessage("Isla Gris", "Emociones");
+    expect(msg).toContain("Isla Gris");
+    expect(msg).toContain("de la serie Emociones");
   });
 });
 

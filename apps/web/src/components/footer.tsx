@@ -1,78 +1,88 @@
-import Link from "next/link";
+import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { Logo } from "./logo";
 
-const footerLinks = [
-  {
-    title: "Portfolio",
-    links: [
-      { label: "Proyectos", href: "/proyectos" },
-      { label: "Arte", href: "/arte" },
-      { label: "Muebles", href: "/muebles" },
-    ],
-  },
-  {
-    title: "Studio",
-    links: [
-      { label: "Sobre el estudio", href: "/studio" },
-      { label: "Contacto", href: "/contacto" },
-    ],
-  },
-  {
-    title: "Redes",
-    links: [
-      { label: "Instagram Interiorismo", href: "https://instagram.com/sofiamosquera.interiorismo" },
-      { label: "Instagram Arte", href: "https://instagram.com/sofiamosquera.arte" },
-    ],
-  },
-];
-
+/**
+ * Footer V3 — Lovable-aligned (F-01).
+ *
+ * Single centred block (no 4-col layout from v2).
+ * Wordmark logo at top + name + email (bold) + phone + address + Instagram.
+ * Hover darkens links.
+ */
 export function Footer() {
+  const t = useTranslations("footer");
+  const tNav = useTranslations("nav");
+  const locale = useLocale();
+  const year = new Date().getFullYear();
+
+  const homeHref =
+    locale === "en" ? "/en" : "/es";
+
   return (
-    <footer className="bg-brand-negro text-brand-blanco-calido mt-24">
-      <div className="max-w-[1440px] mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+    <footer className="border-t border-brand-crema bg-brand-blanco-calido">
+      <div className="max-w-[900px] mx-auto px-6 py-16 md:py-20 text-center">
+        <Link href="/" aria-label={tNav("homeLabel")}>
+          <Logo
+            variant="wordmark-dark"
+            width={200}
+            height={28}
+            alt="Sofía Mosquera Estudio"
+            className="mx-auto opacity-90 hover:opacity-100 transition-opacity"
+          />
+        </Link>
+
+        <p className="font-heading text-2xl md:text-3xl text-brand-negro mt-8 leading-tight">
+          {t("studio")}
+        </p>
+
+        <div className="mt-8 space-y-3">
           <div>
-            <span className="font-heading text-3xl">SM</span>
-            <p className="font-body font-light text-sm text-brand-gris-nav mt-4 leading-relaxed">
-              Interiorismo, arte original y muebles a medida. Un único proceso
-              creativo.
-            </p>
-            <p className="font-body text-xs text-brand-gris-nav mt-4 tracking-wider uppercase">
-              Mendoza · Santiago
-            </p>
+            <a
+              href="mailto:smosquera@sofimosquera.com"
+              className="font-body text-base font-bold text-brand-negro hover:text-brand-negro-suave transition-colors"
+            >
+              smosquera@sofimosquera.com
+            </a>
           </div>
-
-          {footerLinks.map((group) => (
-            <div key={group.title}>
-              <h4 className="font-body text-[10px] font-medium tracking-[0.3em] uppercase text-brand-gris-nav mb-6">
-                {group.title}
-              </h4>
-              <ul className="space-y-3">
-                {group.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="font-body text-sm font-light text-brand-blanco-calido hover:text-brand-gris-nav transition-colors"
-                      {...(link.href.startsWith("http")
-                        ? { target: "_blank", rel: "noopener noreferrer" }
-                        : {})}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div>
+            <a
+              href="tel:+5492615456913"
+              className="font-body text-sm font-light text-brand-negro-suave hover:text-brand-negro transition-colors"
+            >
+              +54 9 261 545 6913
+            </a>
+          </div>
+          <div>
+            <span className="font-body text-sm font-light text-brand-negro-suave">
+              Chacras de Coria, Mendoza
+            </span>
+          </div>
+          <div>
+            <a
+              href="https://instagram.com/sofiamosquera.interiorismo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-body text-sm font-light text-brand-negro-suave hover:text-brand-negro transition-colors"
+            >
+              @sofiamosquera.interiorismo
+            </a>
+          </div>
         </div>
 
-        <div className="border-t border-brand-blanco-calido/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-body text-xs text-brand-gris-nav/50">
-            &copy; {new Date().getFullYear()} Sofía Mosquera. Todos los derechos reservados.
-          </p>
-          <p className="font-body text-xs text-brand-gris-nav/30 tracking-wider uppercase">
-            No decoramos. Habitamos.
-          </p>
-        </div>
+        <p className="font-body text-[11px] tracking-[0.3em] uppercase text-brand-gris-nav mt-12">
+          {t("tagline")}
+        </p>
+
+        <p className="font-body text-xs text-brand-gris-nav/70 mt-3">
+          © {year} {t("studio")} — {t("rights")}
+          {" · "}
+          <Link
+            href="/contacto"
+            className="hover:text-brand-negro transition-colors"
+          >
+            {tNav("contacto")}
+          </Link>
+        </p>
       </div>
     </footer>
   );

@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@sofi/ui", "@sofi/db", "@sofi/tokens"],
@@ -18,21 +21,21 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/cuadros",
-        destination: "/arte",
+        destination: "/es/arte",
         permanent: true,
       },
       {
         source: "/sobre",
-        destination: "/studio",
+        destination: "/es/estudio",
         permanent: true,
       },
       {
         source: "/asesoria",
-        destination: "/studio#proceso",
+        destination: "/es/estudio",
         permanent: true,
       },
     ];
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

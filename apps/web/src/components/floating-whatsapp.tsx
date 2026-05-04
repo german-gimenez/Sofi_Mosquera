@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useLocale } from "next-intl";
+import { usePathname } from "@/i18n/navigation";
 import { WhatsAppCTA, messageForPath } from "@sofi/ui";
 
 export function FloatingWhatsApp() {
   const pathname = usePathname();
-  const message = messageForPath(pathname ?? "/");
+  const locale = useLocale();
+  const message = messageForPath(pathname ?? "/", locale as "es" | "en");
 
   const [hidden, setHidden] = useState(false);
 
@@ -56,7 +58,7 @@ export function FloatingWhatsApp() {
       <WhatsAppCTA
         variant="floating"
         message={message}
-        label="Escribinos"
+        label="WhatsApp"
         tabIndex={hidden ? -1 : 0}
       />
     </div>

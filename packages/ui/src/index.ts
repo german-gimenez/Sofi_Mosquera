@@ -22,12 +22,14 @@ export { WhatsAppCTA } from "./components/whatsapp-cta";
 export {
   WHATSAPP_PHONE,
   WHATSAPP_MESSAGES,
+  WHATSAPP_MESSAGES_I18N,
   artworkMessage,
   furnitureMessage,
   projectMessage,
   messageForPath,
   buildWhatsAppUrl,
   type WhatsAppContext,
+  type Locale as WhatsAppLocale,
 } from "./lib/whatsapp-messages";
 export { SectionReveal } from "./components/section-reveal";
 export { Marquee } from "./components/marquee";

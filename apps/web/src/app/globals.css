@@ -13,20 +13,19 @@
   --color-background: #F5F3EE;
   --color-foreground: #111111;
 
-  /* Font families */
-  --font-heading: "Instrument Serif", serif;
-  --font-body: "Jost", sans-serif;
+  /* Font families — V3 Lovable-aligned */
+  --font-heading: "Cormorant Garamond", "Instrument Serif", serif;
+  --font-body: "Manrope", "Jost", sans-serif;
 
-  /* Border radius */
-  --radius-card: 12px;
-  --radius-image: 16px;
+  /* Border radius — V3 G-01: square corners on images/cards */
+  --radius-card: 0px;
+  --radius-image: 0px;
   --radius-pill: 500px;
 
-  /* Marquee animation */
+  /* Animations */
   --animate-marquee: marquee linear infinite;
-
-  /* Hero scroll indicator */
   --animate-bounce-arrow: bounce-arrow 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-ken-burns: ken-burns 24s ease-in-out infinite alternate;
 }
 
 @keyframes marquee {
@@ -61,15 +60,30 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-bounce-arrow {
-    animation: none;
-    transform: scaleY(1);
-    opacity: 0.6;
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
   }
 }
 
-/* Nav underline-from-center hover effect */
+@media (prefers-reduced-motion: reduce) {
+  .animate-bounce-arrow,
+  .animate-ken-burns {
+    animation: none;
+  }
+  .animate-bounce-arrow {
+    transform: scaleY(1);
+    opacity: 0.6;
+  }
+  .animate-ken-burns {
+    transform: scale(1);
+  }
+}
+
+/* Nav underline-from-center hover */
 .nav-underline {
   position: relative;
   padding-bottom: 2px;
@@ -91,6 +105,15 @@
   transform: scaleX(1);
 }
 
+/* Artwork card commerce: hover toggle to context image with crossfade */
+.artwork-card .artwork-context {
+  opacity: 0;
+  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.artwork-card:hover .artwork-context {
+  opacity: 1;
+}
+
 /* Base styles following Brand DNA */
 body {
   background: var(--color-background);
@@ -105,10 +128,10 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
 }
 
-/* Selection color matching brand */
 ::selection {
   background-color: #EAE7E0;
   color: #111111;
