@@ -75,7 +75,7 @@ export function WhatsAppCTA({
       aria-label={computedAriaLabel}
       tabIndex={tabIndex}
       className={cn(
-        "group inline-flex items-center justify-center gap-2.5 whitespace-nowrap bg-brand-negro text-brand-blanco-calido px-7 py-4 md:px-9 md:py-4.5 rounded-[8px] hover:bg-brand-negro-suave transition-colors font-body font-light text-[15px]",
+        "group inline-flex items-center justify-center gap-3 whitespace-nowrap bg-brand-negro text-brand-blanco-calido px-8 py-4 md:px-10 md:py-5 rounded-[8px] hover:bg-brand-negro-suave transition-colors font-body font-light text-[15px]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-negro/30 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-blanco-calido",
         className
       )}
