@@ -98,14 +98,24 @@ ensucian el media library de los demás proyectos.
 ### Convención de subcarpetas
 
 ```
-sofi-mosquera/projects/{slug}/{01..NN}
-sofi-mosquera/artworks/{seriesSlug}/{slug}/cover   (con serie)
-sofi-mosquera/artworks/{slug}/cover                (sin serie)
-sofi-mosquera/artworks/{slug}/context              (foto de instalación)
-sofi-mosquera/furniture/{slug}/{01..NN}
-sofi-mosquera/about/sofia-{01..03}
-sofi-mosquera/branding/{sm-dark|sm-white|wordmark-dark|wordmark-white}
+sofi-mosquera/
+├── about/                              ← retratos de Sofía (sofia-01..03)
+├── branding/                           ← logos (sm-dark, sm-white, wordmark-dark, wordmark-white)
+├── projects/{slug}/{cover,01..NN}      ← interiorismo VIGENTE (visible=true en DB)
+├── artworks/
+│   ├── {seriesSlug}/{slug}/{cover,context}   ← obras dentro de una serie (Emociones, etc.)
+│   └── {slug}/{cover,context}                ← obras sin serie (raro)
+├── furniture/{slug}/{cover,01..NN}     ← catálogo de muebles
+└── _archive/                           ← contenido legacy (visible=false en DB) o huérfanos
+    ├── projects/{slug}/...
+    └── artworks/{slug}/...
 ```
+
+**Reglas operativas**:
+- Cuando un proyecto deja de ser visible público (visible=false), mover sus assets a `_archive/projects/{slug}/`. La app no los muestra pero el admin los conserva.
+- Cuando una obra queda sin DB row, va a `_archive/artworks/{slug}/`.
+- `_archive/` NO se sirve desde el sitio público pero las URLs siguen funcionando si alguien las tiene linkeadas.
+- Para reorganizar masivamente usar `pnpm --filter @sofi/db exec tsx reorganize-cloudinary.ts --dry-run` (ver script para mover Cloudinary + DB sincronizado).
 
 ### DB
 

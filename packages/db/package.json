@@ -18,6 +18,7 @@
     "drizzle-orm": "^0.45.2"
   },
   "devDependencies": {
+    "cloudinary": "^2.9.0",
     "dotenv": "^16",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4"
