@@ -137,7 +137,7 @@ export function ContactForm({ locale }: ContactFormProps) {
         type="submit"
         disabled={status === "submitting"}
         className={cn(
-          "font-body text-sm font-medium tracking-[0.15em] uppercase bg-brand-negro text-brand-blanco-calido px-8 py-3 transition-colors hover:bg-brand-negro-suave",
+          "font-body text-sm font-medium tracking-[0.15em] uppercase whitespace-nowrap bg-brand-negro text-brand-blanco-calido px-8 py-3 rounded-[8px] transition-colors hover:bg-brand-negro-suave",
           status === "submitting" && "opacity-60 cursor-wait"
         )}
       >

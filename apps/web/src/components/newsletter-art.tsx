@@ -102,7 +102,7 @@ export function NewsletterArt() {
                 type="submit"
                 disabled={status === "submitting"}
                 className={cn(
-                  "font-body text-sm font-medium tracking-[0.15em] uppercase px-6 py-3 transition-colors",
+                  "font-body text-sm font-medium tracking-[0.15em] uppercase whitespace-nowrap shrink-0 px-6 py-3 rounded-[8px] transition-colors",
                   "bg-brand-negro text-brand-blanco-calido hover:bg-brand-negro-suave",
                   status === "submitting" && "opacity-60 cursor-wait"
                 )}
