@@ -11,16 +11,9 @@ import {
 } from "@sofi/ui";
 import { Logo } from "./logo";
 import { LocaleSwitcher } from "./locale-switcher";
+import { NAV_LINKS } from "@/lib/nav-links";
 
-export const NAV_LINKS = [
-  { href: "/", labelKey: "inicio" as const },
-  { href: "/proyectos", labelKey: "proyectos" as const },
-  { href: "/estudio", labelKey: "estudio" as const },
-  { href: "/servicios", labelKey: "servicios" as const },
-  { href: "/muebles", labelKey: "muebles" as const },
-  { href: "/arte", labelKey: "arte" as const },
-  { href: "/contacto", labelKey: "contacto" as const },
-] as const;
+export { NAV_LINKS };
 
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/" || pathname === "";
@@ -49,6 +42,11 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  /* Only the home page uses transparent header over dark hero.
+     All other pages start with solid background + dark text. */
+  const isHome = pathname === "/";
+  const showDark = !isHome || scrolled;
 
   useEffect(() => {
     setOpen(false);
@@ -82,7 +80,7 @@ export function Nav() {
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          scrolled
+          showDark
             ? "bg-brand-blanco-calido/92 backdrop-blur-md border-b border-brand-crema/70"
             : "bg-transparent"
         )}
@@ -94,7 +92,7 @@ export function Nav() {
             className="flex items-center"
           >
             <Logo
-              variant={scrolled ? "sm-dark" : "sm-white"}
+              variant={showDark ? "sm-dark" : "sm-white"}
               width={42}
               height={42}
               priority
@@ -113,7 +111,7 @@ export function Nav() {
                       aria-current={active ? "page" : undefined}
                       className={cn(
                         "nav-underline font-body text-[13px] font-light tracking-[0.15em] uppercase transition-colors",
-                        scrolled
+                        showDark
                           ? "text-brand-negro hover:text-brand-gris-nav"
                           : "text-brand-blanco-calido hover:text-brand-blanco-calido/80",
                         active && "nav-underline-active"
@@ -129,7 +127,7 @@ export function Nav() {
 
           <div className="flex items-center gap-4 md:gap-5">
             <div className="hidden md:block">
-              <LocaleSwitcher scrolled={scrolled} />
+              <LocaleSwitcher scrolled={showDark} />
             </div>
             <a
               href={waUrl}
@@ -138,7 +136,7 @@ export function Nav() {
               aria-label={t("whatsapp")}
               className={cn(
                 "hidden md:inline-flex items-center justify-center transition-colors",
-                scrolled
+                showDark
                   ? "text-brand-negro hover:text-brand-gris-nav"
                   : "text-brand-blanco-calido hover:text-brand-blanco-calido/80"
               )}
@@ -160,7 +158,7 @@ export function Nav() {
                     "block h-px transition-all duration-300",
                     open
                       ? "bg-brand-negro rotate-45 translate-y-[6px]"
-                      : scrolled
+                      : showDark
                         ? "bg-brand-negro"
                         : "bg-brand-blanco-calido"
                   )}
@@ -170,7 +168,7 @@ export function Nav() {
                     "block h-px transition-all duration-300",
                     open
                       ? "opacity-0"
-                      : scrolled
+                      : showDark
                         ? "bg-brand-negro"
                         : "bg-brand-blanco-calido"
                   )}
@@ -180,7 +178,7 @@ export function Nav() {
                     "block h-px transition-all duration-300",
                     open
                       ? "bg-brand-negro -rotate-45 -translate-y-[6px]"
-                      : scrolled
+                      : showDark
                         ? "bg-brand-negro"
                         : "bg-brand-blanco-calido"
                   )}
