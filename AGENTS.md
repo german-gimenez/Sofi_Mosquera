@@ -87,23 +87,70 @@ ORM: Drizzle con `neon-http` driver v1. Helper: `createDb()` desde `@sofi/db`.
 
 ## Image Handling — Cloudinary
 
-Namespace: `sofi-mosquera/`
-- `sofi-mosquera/projects/{slug}/01..08`
-- `sofi-mosquera/artworks/{slug}/cover` (+ context)
-- `sofi-mosquera/about/sofia-01..03`
+### ⛔ Hard rule: namespace = `sofi-mosquera/`
 
-DB guarda `public_id`, NO URL completa. URLs se arman con helpers de `@sofi/ui`:
+La cuenta Cloudinary `dsrvlln9j` está **compartida** con otros proyectos
+(`suplement-app/`, `zapata-goma/`, `underfeet/`). Todos los assets de Sofi DEBEN
+vivir bajo `sofi-mosquera/`. Nunca subir nada al root, ni a `sofimosquera/`
+(sin guion). Quien viola esto deja imágenes huérfanas que rompen la galería y
+ensucian el media library de los demás proyectos.
 
-```ts
-import { cldUrl, cldThumb, cldCard, cldHero, cldSquare, cldZoom, cldGallery, cldArtwork } from "@sofi/ui";
-<img src={cldCard(project.coverUrl)} alt={...} />
+### Convención de subcarpetas
+
+```
+sofi-mosquera/projects/{slug}/{01..NN}
+sofi-mosquera/artworks/{seriesSlug}/{slug}/cover   (con serie)
+sofi-mosquera/artworks/{slug}/cover                (sin serie)
+sofi-mosquera/artworks/{slug}/context              (foto de instalación)
+sofi-mosquera/furniture/{slug}/{01..NN}
+sofi-mosquera/about/sofia-{01..03}
+sofi-mosquera/branding/{sm-dark|sm-white|wordmark-dark|wordmark-white}
 ```
 
-`cldUrl()` acepta tanto public_id como URL completa (backward compat).
-Cache busting global: parámetro `v20260421` en URL.
+### DB
 
-Para uploads desde admin UI: `<CloudinaryUpload>` (`apps/admin/src/components/cloudinary-upload.tsx`)
-firmando con `/api/cloudinary-sign`.
+Guardar **public_id** en `cover_url`, `context_url`, `gallery[]`. NUNCA URL completa.
+Prefix `video:` solo para public_ids cuyo source es video (se renderiza poster
+con `so_auto`).
+
+### URLs en código
+
+```ts
+import { cldCard, cldHero, cldGallery } from "@sofi/ui";
+
+<img src={cldCard(project.coverUrl)} alt="..." />
+```
+
+Helpers expuestos en `@sofi/ui`:
+- `cldUrl`, `cldThumb`, `cldCard`, `cldHero`, `cldSquare`
+- `cldArtwork`, `cldGallery`, `cldZoom`
+- `cldEnhanced`, `cldUpscaled`, `cldPortrait` (AI)
+- `cldVideoUrl`, `cldSrcSet`
+- `SOFI_NAMESPACE` (constante)
+- `assertSofiPath(value, ctx?)` — tira error si el path no es del namespace
+- `isSofiPath(value)` — versión booleana
+
+`cldUrl()` acepta tanto public_id como URL completa (backward compat).
+
+### Cache busting
+
+Cada URL lleva `vNNNNNNNN` (var `ASSET_VERSION` hardcoded en
+`packages/ui/src/lib/cloudinary.ts`). Bumpear cuando se re-uploadea un asset
+en el mismo public_id, o el CDN sirve 404 stale por varios minutos.
+
+### Upload workflows
+
+| Origen | Comando / componente | Guard |
+|--------|----------------------|-------|
+| Bulk filesystem | `npx tsx scripts/upload-images.ts` | Asserts `startsWith("sofi-mosquera/")` |
+| Logos | `npx tsx scripts/upload-branding.ts` | Idem |
+| Admin UI | `<CloudinaryUpload>` defaultea a `folder="sofi-mosquera"` | API `/api/cloudinary-sign` reescribe `folder`/`public_id` para forzar el prefix antes de firmar |
+| Rename manual | one-off script con `cloudinary.uploader.rename(from, to, { invalidate: true })` | Ver `scripts/rename-emociones-assets.ts` como template |
+
+### Auditorías
+
+- `npx tsx scripts/audit-cloudinary.ts` — inventario completo agrupado por carpeta. Vuelca a `tmp-cloudinary-inventory.json`
+- `pnpm --filter @sofi/db exec tsx audit-db-vs-cloudinary.ts` — cruza todo `cover_url` / `gallery` de la DB contra el inventario. Debe estar en verde siempre. Falla en `pnpm test`.
 
 ## Key Patterns
 

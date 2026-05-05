@@ -43,6 +43,7 @@ assets/*.HEIC
 
 # scratch / temp working dir
 temp/
+tmp-*.json
 
 # OpenCode session/cache (project-local)
 .opencode/cache/

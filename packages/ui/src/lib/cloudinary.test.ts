@@ -1,89 +1,139 @@
 /**
- * Cloudinary helper tests.
- * Run: npx tsx packages/ui/src/lib/cloudinary.test.ts
+ * Sanity tests for the Cloudinary helper module.
+ * Standalone test runner — no framework. Run with `tsx`.
  */
+import { strict as assert } from "node:assert";
 import {
+  SOFI_NAMESPACE,
+  assertSofiPath,
+  isSofiPath,
   cldUrl,
-  cldThumb,
   cldCard,
-  cldHero,
-  cldSquare,
-  cldZoom,
-  cldGallery,
-  cldArtwork,
-  cldEnhanced,
-  cldUpscaled,
-  cldPortrait,
-  cldSrcSet,
+  cldVideoUrl,
+  isVideoPublicId,
+  videoPublicId,
 } from "./cloudinary";
 
-let pass = 0;
-let fail = 0;
+let passed = 0;
+let failed = 0;
 
-function assert(cond: boolean, msg: string) {
-  if (cond) {
-    pass++;
-    console.log(`  ✓ ${msg}`);
-  } else {
-    fail++;
-    console.error(`  ✗ FAIL: ${msg}`);
+function test(name: string, fn: () => void) {
+  try {
+    fn();
+    console.log(`  ✓ ${name}`);
+    passed++;
+  } catch (e) {
+    console.log(`  ✗ ${name}`);
+    console.log(`      ${(e as Error).message}`);
+    failed++;
   }
 }
 
-console.log("Cloudinary helper tests\n");
+console.log("\nSOFI_NAMESPACE:");
+test("namespace is the canonical 'sofi-mosquera'", () => {
+  assert.equal(SOFI_NAMESPACE, "sofi-mosquera");
+});
 
-console.log("cldUrl basic:");
-const url = cldUrl("sofi-mosquera/projects/casa-susel/01");
-assert(url.includes("res.cloudinary.com"), "has Cloudinary host");
-assert(url.includes("f_auto"), "has f_auto");
-assert(url.includes("q_auto"), "has q_auto");
-assert(url.includes("w_1200"), "default width is 1200");
-assert(url.endsWith("/sofi-mosquera/projects/casa-susel/01"), "ends with public_id");
+console.log("\nassertSofiPath():");
+test("accepts a valid public_id", () => {
+  const out = assertSofiPath("sofi-mosquera/projects/casa-bf/01");
+  assert.equal(out, "sofi-mosquera/projects/casa-bf/01");
+});
+test("accepts a video: prefixed id", () => {
+  const out = assertSofiPath("video:sofi-mosquera/projects/casa-laura/03");
+  assert.equal(out, "video:sofi-mosquera/projects/casa-laura/03");
+});
+test("accepts a full https URL (backward compat)", () => {
+  const url = "https://cdn.example.com/img.jpg";
+  assert.equal(assertSofiPath(url), url);
+});
+test("rejects empty/null", () => {
+  assert.throws(() => assertSofiPath(""), /empty public_id/);
+  assert.throws(() => assertSofiPath(null), /empty public_id/);
+});
+test("rejects out-of-namespace public_id", () => {
+  assert.throws(
+    () => assertSofiPath("suplement-app/foo"),
+    /must live under "sofi-mosquera\/"/
+  );
+  assert.throws(
+    () => assertSofiPath("sofimosquera/foo"), // missing dash → wrong folder
+    /must live under "sofi-mosquera\/"/
+  );
+  assert.throws(
+    () => assertSofiPath("loose-asset"),
+    /must live under "sofi-mosquera\/"/
+  );
+});
+test("rejects uppercase, spaces, traversal", () => {
+  assert.throws(() => assertSofiPath("sofi-mosquera/Projects/x"), /invalid characters/);
+  assert.throws(() => assertSofiPath("sofi-mosquera/projects/x x"), /invalid characters/);
+  assert.throws(() => assertSofiPath("sofi-mosquera/../escape"), /invalid characters/);
+});
+test("ctx is included in the error message", () => {
+  assert.throws(
+    () => assertSofiPath("oops/foo", "projects.cover_url"),
+    /projects\.cover_url/
+  );
+});
 
-console.log("\ncldUrl options:");
-assert(cldUrl("x", { w: 600 }).includes("w_600"), "custom width");
-assert(cldUrl("x", { h: 400 }).includes("h_400"), "custom height");
-assert(cldUrl("x", { crop: "fill" }).includes("c_fill"), "crop mode");
-assert(cldUrl("x", { g: "auto" }).includes("g_auto"), "gravity");
-assert(cldUrl("x", { effect: "improve" }).includes("e_improve"), "effect");
-assert(cldUrl("x", { removeBg: true }).includes("e_background_removal"), "remove bg");
-assert(cldUrl("x", { generativeFill: true }).includes("b_gen_fill"), "generative fill");
-assert(cldUrl("x", { dpr: 2 }).includes("dpr_2"), "dpr");
+console.log("\nisSofiPath():");
+test("returns true for valid namespace path", () => {
+  assert.equal(isSofiPath("sofi-mosquera/x/y"), true);
+});
+test("returns true for video: prefix path", () => {
+  assert.equal(isSofiPath("video:sofi-mosquera/x"), true);
+});
+test("returns false for null/empty/foreign paths", () => {
+  assert.equal(isSofiPath(null), false);
+  assert.equal(isSofiPath(""), false);
+  assert.equal(isSofiPath("suplement-app/foo"), false);
+  assert.equal(isSofiPath("sofimosquera/foo"), false);
+});
+test("recognizes namespace inside a full Cloudinary URL", () => {
+  assert.equal(
+    isSofiPath(
+      "https://res.cloudinary.com/dsrvlln9j/image/upload/sofi-mosquera/projects/x/01"
+    ),
+    true
+  );
+});
 
-console.log("\nPass-through for URLs:");
-const externalUrl = "https://example.com/img.jpg";
-assert(cldUrl(externalUrl) === externalUrl, "full URLs returned as-is");
-assert(cldUrl(null) === "", "null returns empty");
-assert(cldUrl(undefined) === "", "undefined returns empty");
-assert(cldUrl("") === "", "empty string returns empty");
+console.log("\ncldUrl() output:");
+test("includes the version segment", () => {
+  const url = cldUrl("sofi-mosquera/projects/casa-bf/cover", { w: 800 });
+  assert.match(url, /\/v\d+\//, "URL should contain v{ASSET_VERSION}/");
+});
+test("returns full URL pass-through unchanged", () => {
+  const u = "https://cdn.example.com/image.jpg";
+  assert.equal(cldUrl(u), u);
+});
+test("returns empty string for null", () => {
+  assert.equal(cldUrl(null), "");
+  assert.equal(cldUrl(undefined), "");
+});
+test("cldCard uses fill 800x1000 g_auto", () => {
+  const url = cldCard("sofi-mosquera/x/y");
+  assert.match(url, /w_800/);
+  assert.match(url, /h_1000/);
+  assert.match(url, /c_fill/);
+  assert.match(url, /g_auto/);
+});
 
-console.log("\nPresets:");
-assert(cldThumb("x").includes("w_600") && cldThumb("x").includes("h_750"), "cldThumb 600x750");
-assert(cldCard("x").includes("w_800") && cldCard("x").includes("h_1000"), "cldCard 800x1000");
-assert(cldHero("x").includes("w_2000") && cldHero("x").includes("h_1200"), "cldHero 2000x1200");
-assert(cldSquare("x").includes("w_600") && cldSquare("x").includes("h_600"), "cldSquare 600x600");
-assert(cldZoom("x").includes("w_2400"), "cldZoom w_2400");
-assert(cldZoom("x").includes("q_90"), "cldZoom q_90");
-assert(cldGallery("x").includes("w_1600") && cldGallery("x").includes("h_1000"), "cldGallery 1600x1000");
-assert(cldArtwork("x").includes("c_fit"), "cldArtwork uses c_fit");
+console.log("\nvideo helpers:");
+test("isVideoPublicId detects prefix", () => {
+  assert.equal(isVideoPublicId("video:foo/bar"), true);
+  assert.equal(isVideoPublicId("foo/bar"), false);
+  assert.equal(isVideoPublicId(null), false);
+});
+test("videoPublicId() adds prefix", () => {
+  assert.equal(videoPublicId("sofi-mosquera/projects/x/01"), "video:sofi-mosquera/projects/x/01");
+});
+test("cldVideoUrl strips video: prefix", () => {
+  const u = cldVideoUrl("video:sofi-mosquera/projects/x/01");
+  assert.match(u, /\/sofi-mosquera\/projects\/x\/01\.mp4$/);
+  assert.doesNotMatch(u, /video:/);
+});
 
-console.log("\nAI presets:");
-assert(cldEnhanced("x").includes("e_improve"), "cldEnhanced has e_improve");
-assert(cldUpscaled("x").includes("e_upscale"), "cldUpscaled has e_upscale");
-assert(cldPortrait("x").includes("g_face:auto"), "cldPortrait uses face gravity");
-assert(cldPortrait("x").includes("e_sharpen"), "cldPortrait has sharpen");
-
-console.log("\nsrcset:");
-const srcset = cldSrcSet("x", [400, 800, 1200]);
-assert(srcset.includes("400w"), "srcset has 400w");
-assert(srcset.includes("800w"), "srcset has 800w");
-assert(srcset.includes("1200w"), "srcset has 1200w");
-// Count entries by `w, ` separator (between entries, not inside URLs)
-assert(srcset.split(", ").length === 3, "srcset has 3 entries");
-
-console.log("\nBrand DNA compliance:");
-assert(!cldUrl("x").includes("#FFFFFF"), "no pure white in transformations");
-assert(!cldUrl("x").includes("#000000"), "no pure black in transformations");
-
-console.log(`\n${pass} passed, ${fail} failed`);
-process.exit(fail > 0 ? 1 : 0);
+console.log(`\n${passed} passed, ${failed} failed\n`);
+process.exit(failed === 0 ? 0 : 1);

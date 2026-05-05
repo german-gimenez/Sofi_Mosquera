@@ -7,11 +7,77 @@ const BASE_IMAGE = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
 const BASE_VIDEO = `https://res.cloudinary.com/${CLOUD_NAME}/video/upload`;
 
 /**
+ * Canonical Cloudinary namespace for the Sofia Mosquera project.
+ * Every asset MUST live under this prefix. Other projects in the same
+ * shared cloud (suplement-app, zapata-goma, underfeet) live in their own
+ * top-level folders. Code that uploads, references or generates URLs MUST
+ * pass values that start with `${SOFI_NAMESPACE}/...`.
+ *
+ * Sub-folder convention:
+ *   sofi-mosquera/projects/{slug}/{01..NN}
+ *   sofi-mosquera/artworks/{seriesSlug}/{slug}/cover  (or just /{slug}/cover for non-series)
+ *   sofi-mosquera/artworks/{slug}/context             (the context/installation shot)
+ *   sofi-mosquera/furniture/{slug}/{01..NN}
+ *   sofi-mosquera/about/sofia-{01..03}
+ *   sofi-mosquera/branding/{sm-dark|sm-white|wordmark-dark|wordmark-white}
+ */
+export const SOFI_NAMESPACE = "sofi-mosquera";
+
+/**
+ * Validate that a public_id (or DB-stored cover_url that is a public_id)
+ * lives under the canonical Sofia namespace. Throws on invalid input
+ * — callers should treat a thrown error as a bug.
+ *
+ *   assertSofiPath("sofi-mosquera/projects/casa-bf/cover")  // ok
+ *   assertSofiPath("sofimosquera/foo")                       // throws (typo: missing dash)
+ *   assertSofiPath("video:sofi-mosquera/projects/x/01")      // ok (video-poster prefix)
+ *   assertSofiPath("https://...")                            // ok (we keep external URL pass-through)
+ */
+export function assertSofiPath(value: string | null | undefined, ctx?: string): string {
+  if (!value) {
+    throw new Error(
+      `[cloudinary] empty public_id${ctx ? ` (${ctx})` : ""}. Expected '${SOFI_NAMESPACE}/...'`
+    );
+  }
+  if (value.startsWith("http://") || value.startsWith("https://")) {
+    // Backward compat: previously stored full URLs (Vercel Blob etc.) pass through.
+    return value;
+  }
+  const bare = value.startsWith("video:") ? value.slice("video:".length) : value;
+  if (!bare.startsWith(`${SOFI_NAMESPACE}/`)) {
+    throw new Error(
+      `[cloudinary] public_id "${value}" must live under "${SOFI_NAMESPACE}/"${
+        ctx ? ` (${ctx})` : ""
+      }. ` +
+        `If this is a Sofia asset uploaded outside the namespace, move it via Cloudinary rename. ` +
+        `If it belongs to another project (suplement-app, zapata-goma, underfeet), do NOT reference it from this app.`
+    );
+  }
+  if (/[A-Z]/.test(bare) || /\s/.test(bare) || bare.includes("..")) {
+    throw new Error(
+      `[cloudinary] public_id "${value}" has invalid characters. Use lowercase, hyphens, and forward slashes only.`
+    );
+  }
+  return value;
+}
+
+/**
+ * Variant of `assertSofiPath` that does not throw — returns true/false.
+ * Useful when classifying a list of mixed inputs.
+ */
+export function isSofiPath(value: string | null | undefined): boolean {
+  if (!value) return false;
+  if (value.startsWith("http")) return value.includes(`/${SOFI_NAMESPACE}/`);
+  const bare = value.startsWith("video:") ? value.slice("video:".length) : value;
+  return bare.startsWith(`${SOFI_NAMESPACE}/`);
+}
+
+/**
  * Global asset version. Bumping this invalidates browser/CDN caches for all
  * Cloudinary URLs because it becomes part of the URL path (v{version}/...).
  * Increment whenever content is re-uploaded at the same public_id.
  */
-const ASSET_VERSION = process.env.NEXT_PUBLIC_ASSETS_VERSION || "20260421";
+const ASSET_VERSION = process.env.NEXT_PUBLIC_ASSETS_VERSION || "20260505";
 
 /** Video poster prefix — stored public_ids starting with this are video assets
  *  and will be rendered as image thumbnails using Cloudinary's video→image pipeline. */

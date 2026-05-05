@@ -62,6 +62,12 @@ const ARTWORKS: ArtworkMap[] = [
 ];
 
 async function uploadFile(filePath: string, publicId: string): Promise<string> {
+  // Hard guard: every upload from this script must land under the Sofi namespace.
+  if (!publicId.startsWith(`${NAMESPACE}/`)) {
+    throw new Error(
+      `[upload-images] refusing upload "${publicId}": must start with "${NAMESPACE}/"`
+    );
+  }
   const result = await cloudinary.uploader.upload(filePath, {
     public_id: publicId,
     overwrite: true,

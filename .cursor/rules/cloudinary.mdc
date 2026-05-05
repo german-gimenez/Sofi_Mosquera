@@ -1,34 +1,76 @@
 ---
 description: Cloudinary image patterns. Apply when handling images in the app.
-globs: apps/**/*.tsx,packages/ui/**/*.tsx,scripts/**/*.ts
+globs: apps/**/*.tsx,apps/**/route.ts,packages/ui/**/*.ts,packages/ui/**/*.tsx,scripts/**/*.ts
 alwaysApply: false
 ---
 
 # Cloudinary Patterns
 
-## DB convention
-- Store `public_id` in `cover_url` and in `gallery` jsonb, NEVER full URLs.
-- Format: `sofi-mosquera/projects/{slug}/01` or `sofi-mosquera/artworks/{slug}/cover`.
-- The `cldUrl()` helper handles both public_ids AND full URLs (backward compat).
+## ⛔ Hard rule: namespace
+**Every Cloudinary asset for this project MUST live under `sofi-mosquera/`.**
+The cloud `dsrvlln9j` is shared with other projects (`suplement-app/`,
+`zapata-goma/`, `underfeet/`). Mixing assets across folders breaks the audit
+trail and can collide with other apps' DB references.
 
-## Import helpers from @sofi/ui
-- `cldUrl(publicId, opts)` — flexible builder
-- `cldThumb(publicId)` — 600x750 fill
-- `cldCard(publicId)` — 800x1000 fill (4:5 for cards)
-- `cldHero(publicId)` — 2000x1200 fill (wide hero)
-- `cldSquare(publicId)` — 600x600 fill
-- `cldArtwork(publicId)` — 900x1200 fit (preserves aspect)
-- `cldGallery(publicId)` — 1600x1000 fill (detail gallery)
-- `cldZoom(publicId)` — 2400px limit, q:90 (lightbox)
+Exported helpers from `@sofi/ui`:
+- `SOFI_NAMESPACE` = `"sofi-mosquera"`
+- `assertSofiPath(value, ctx?)` → throws if value is not under namespace.
+  Use it in any code path that constructs or stores a public_id.
+- `isSofiPath(value)` → boolean version.
 
-## Usage in components
-```tsx
-import { cldCard } from "@sofi/ui";
-
-<img src={cldCard(project.coverUrl)} alt={project.title} loading="lazy" />
+## Sub-folder convention (canonical)
+```
+sofi-mosquera/projects/{slug}/{01..NN}
+sofi-mosquera/artworks/{seriesSlug}/{slug}/cover   (series-grouped)
+sofi-mosquera/artworks/{slug}/cover                (no series)
+sofi-mosquera/artworks/{slug}/context              (installation/context shot)
+sofi-mosquera/furniture/{slug}/{01..NN}
+sofi-mosquera/about/sofia-{01..03}
+sofi-mosquera/branding/{sm-dark|sm-white|wordmark-dark|wordmark-white}
 ```
 
-## Upload workflow
-- Bulk from filesystem: `npx tsx scripts/upload-images.ts` (reads `assets/` folder)
-- Ongoing from admin UI: use `<CloudinaryUpload>` component (signed via `/api/cloudinary-sign`)
-- Max 10MB per file on free tier — compress large files first
+## DB convention
+- Store **public_id** in `cover_url`, `context_url`, `gallery[]`. NEVER full URLs.
+- Use the `video:` prefix only to mark a public_id whose source is a video
+  (rendered via `BASE_VIDEO/.../so_auto/{id}` to extract a poster frame).
+
+## URL building — always use helpers
+```tsx
+import { cldCard, cldHero, cldGallery } from "@sofi/ui";
+
+<img src={cldCard(project.coverUrl)} alt="..." />
+```
+
+Available presets:
+- `cldUrl(publicId, opts)` — generic
+- `cldThumb` — 600×750 fill 4:5
+- `cldCard` — 800×1000 fill 4:5
+- `cldHero` — 2000×1200 wide
+- `cldSquare` — 600×600
+- `cldArtwork` — 900×1200 fit (preserves aspect)
+- `cldGallery` — 1600×1000 fill detail
+- `cldZoom` — 2400 limit, q90 lightbox
+- `cldEnhanced` / `cldUpscaled` / `cldPortrait` — AI variants
+
+## Upload workflow (and how to NOT break the namespace)
+- Bulk from filesystem: `npx tsx scripts/upload-images.ts`
+  → script asserts `publicId.startsWith("sofi-mosquera/")` before uploading.
+- Branding/logos: `npx tsx scripts/upload-branding.ts`
+  → same guard.
+- Admin UI: `<CloudinaryUpload>` defaults to `folder="sofi-mosquera"` and
+  `/api/cloudinary-sign` rejects any `paramsToSign` that points outside.
+- Manual rename of misplaced assets: write a one-off script using
+  `cloudinary.uploader.rename(from, to, { invalidate: true })` —
+  see `scripts/rename-emociones-assets.ts` for the template.
+
+## Cache busting
+- Every URL carries `vNNNNNNNN` (hardcoded `ASSET_VERSION` in
+  `packages/ui/src/lib/cloudinary.ts`). Bump it whenever assets are
+  re-uploaded at the same public_id, or the CDN may serve stale 404s for
+  several minutes after a rename.
+
+## Audit / verification
+- `npx tsx scripts/audit-cloudinary.ts` — full inventory grouped by folder.
+- `pnpm --filter @sofi/db exec tsx audit-db-vs-cloudinary.ts` — cross-checks
+  every DB cover_url/gallery against the Cloudinary inventory. Should be
+  green at all times.

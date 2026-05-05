@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { auth } from "@clerk/nextjs/server";
+import { SOFI_NAMESPACE } from "@sofi/ui";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,12 +10,19 @@ cloudinary.config({
   secure: true,
 });
 
+/**
+ * Sign a Cloudinary upload request.
+ *
+ * Hard rule: the resulting upload MUST land under `${SOFI_NAMESPACE}/...`. We
+ * normalize the `folder` and `public_id` server-side so a malicious or buggy
+ * client cannot deposit assets in another project's namespace
+ * (suplement-app, zapata-goma, underfeet, or root) by tampering with
+ * `paramsToSign`.
+ */
 export async function POST(req: Request) {
   // Require auth. When Clerk is enabled this enforces Clerk session.
-  // When Clerk is NOT configured, we refuse the request in prod.
   const hasClerk = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
   if (!hasClerk) {
-    // In production, bail. In preview/dev without Clerk, still refuse.
     return NextResponse.json(
       {
         error:
@@ -46,10 +54,51 @@ export async function POST(req: Request) {
     );
   }
 
+  // Enforce the Sofi namespace before signing. Mutating paramsToSign here
+  // means the client gets a signature that ONLY validates uploads to a path
+  // under sofi-mosquera/. If a client tries to upload elsewhere with this
+  // signature, Cloudinary rejects it.
+  const params = paramsToSign as Record<string, unknown>;
+  const folder = typeof params.folder === "string" ? params.folder.replace(/^\/+/, "") : "";
+  const publicId =
+    typeof params.public_id === "string" ? params.public_id.replace(/^\/+/, "") : "";
+
+  // Normalize folder: must start with sofi-mosquera/ (or BE sofi-mosquera).
+  if (folder && folder !== SOFI_NAMESPACE && !folder.startsWith(`${SOFI_NAMESPACE}/`)) {
+    params.folder = `${SOFI_NAMESPACE}/${folder}`;
+  } else if (!folder && !publicId.startsWith(`${SOFI_NAMESPACE}/`)) {
+    params.folder = SOFI_NAMESPACE;
+  }
+
+  // Normalize public_id: if explicitly given, ensure it's also under namespace
+  // (Cloudinary's resulting full id = folder + "/" + public_id, so a public_id
+  // alone without folder is the only way to escape; we cover both)
+  if (publicId && !publicId.startsWith(`${SOFI_NAMESPACE}/`) && !params.folder) {
+    params.public_id = `${SOFI_NAMESPACE}/${publicId}`;
+  }
+
+  // Final guard: reject if anything still tries to point outside.
+  const finalFolder = String(params.folder ?? "");
+  const finalId = String(params.public_id ?? "");
+  if (finalFolder && finalFolder !== SOFI_NAMESPACE && !finalFolder.startsWith(`${SOFI_NAMESPACE}/`)) {
+    return NextResponse.json(
+      {
+        error: `Refused: upload folder must be under "${SOFI_NAMESPACE}/" (got "${finalFolder}")`,
+      },
+      { status: 400 }
+    );
+  }
+  if (finalId.includes("..") || finalId.startsWith("/")) {
+    return NextResponse.json(
+      { error: "Invalid public_id (no path traversal)" },
+      { status: 400 }
+    );
+  }
+
   const signature = cloudinary.utils.api_sign_request(
-    paramsToSign,
+    params,
     process.env.CLOUDINARY_API_SECRET
   );
 
-  return NextResponse.json({ signature });
+  return NextResponse.json({ signature, params });
 }

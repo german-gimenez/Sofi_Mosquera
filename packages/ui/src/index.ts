@@ -15,6 +15,9 @@ export {
   cldVideoUrl,
   isVideoPublicId,
   videoPublicId,
+  assertSofiPath,
+  isSofiPath,
+  SOFI_NAMESPACE,
   type CldUrlOptions,
 } from "./lib/cloudinary";
 export { Button } from "./components/button";

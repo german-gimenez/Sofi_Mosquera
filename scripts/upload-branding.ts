@@ -49,7 +49,14 @@ const LOGOS: LogoUpload[] = [
   },
 ];
 
+const NAMESPACE = "sofi-mosquera";
+
 async function uploadLogo(logo: LogoUpload): Promise<void> {
+  if (!logo.publicId.startsWith(`${NAMESPACE}/`)) {
+    throw new Error(
+      `[upload-branding] refusing upload "${logo.publicId}": must start with "${NAMESPACE}/"`
+    );
+  }
   const filePath = resolve(ASSETS_ROOT, logo.file);
   if (!existsSync(filePath)) {
     console.error(`  [skip] ${logo.file} not found at ${filePath}`);
