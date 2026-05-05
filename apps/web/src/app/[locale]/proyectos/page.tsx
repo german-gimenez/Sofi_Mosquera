@@ -62,9 +62,8 @@ export default async function ProyectosPage({ params }: Props) {
             {t("empty")}
           </p>
         ) : (
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {allProjects.map((project, i) => {
-              const aspect = i % 3 === 1 ? "aspect-[3/4]" : "aspect-[4/5]";
               const title = pickLocale(project.title, project.titleEn, lc);
               const subtitle = pickLocale(
                 project.subtitle ?? null,
@@ -81,10 +80,10 @@ export default async function ProyectosPage({ params }: Props) {
                     pathname: "/proyectos/[slug]",
                     params: { slug: project.slug },
                   }}
-                  className="group mb-4 block break-inside-avoid relative"
+                  className="group block relative"
                 >
                   <div
-                    className={`bg-brand-crema overflow-hidden relative ${aspect}`}
+                    className="bg-brand-crema overflow-hidden relative aspect-[4/5]"
                   >
                     {project.coverUrl ? (
                       <>

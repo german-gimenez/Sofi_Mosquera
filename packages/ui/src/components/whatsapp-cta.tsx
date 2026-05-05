@@ -43,7 +43,7 @@ export function WhatsAppCTA({
         rel="noopener noreferrer"
         tabIndex={tabIndex}
         className={cn(
-          "group fixed right-6 z-50 flex items-center gap-2 whitespace-nowrap bg-brand-negro text-brand-blanco-calido px-5 py-3 rounded-pill shadow-lg hover:bg-brand-negro-suave transition-all hover:scale-105",
+          "group fixed right-6 z-50 flex items-center gap-2.5 whitespace-nowrap bg-brand-negro text-brand-blanco-calido px-6 py-3.5 rounded-[8px] shadow-lg hover:bg-brand-negro-suave transition-all hover:scale-105",
           "bottom-[calc(1.5rem+env(safe-area-inset-bottom))]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-negro/30 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-blanco-calido",
           "motion-reduce:transition-none motion-reduce:hover:scale-100",
@@ -75,7 +75,7 @@ export function WhatsAppCTA({
       aria-label={computedAriaLabel}
       tabIndex={tabIndex}
       className={cn(
-        "group inline-flex items-center justify-center gap-2 whitespace-nowrap bg-brand-negro text-brand-blanco-calido px-5 py-3.5 md:px-7 md:py-4 rounded-pill hover:bg-brand-negro-suave transition-colors font-body font-light text-sm md:text-[15px]",
+        "group inline-flex items-center justify-center gap-2.5 whitespace-nowrap bg-brand-negro text-brand-blanco-calido px-7 py-4 md:px-9 md:py-4.5 rounded-[8px] hover:bg-brand-negro-suave transition-colors font-body font-light text-[15px]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-negro/30 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-blanco-calido",
         className
       )}
