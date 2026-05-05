@@ -32,8 +32,8 @@ assert(!allColors.includes("#FFFFFF"), "no pure white #FFFFFF anywhere");
 assert(!allColors.includes("#000000"), "no pure black #000000 anywhere");
 
 console.log("\nTypography:");
-assert(fonts.heading.includes("Instrument Serif") || fonts.heading.includes("Athena"), "heading font is serif");
-assert(fonts.body.includes("Jost"), "body font is Jost");
+assert(fonts.heading.includes("Cormorant Garamond") || fonts.heading.includes("Instrument Serif"), "heading font is Cormorant Garamond (V3) or fallback");
+assert(fonts.body.includes("Manrope") || fonts.body.includes("Jost"), "body font is Manrope (V3) or fallback");
 
 console.log("\nTailwind theme:");
 assert(tailwindTheme.colors.brand.negro === "#111111", "tailwind brand-negro matches");

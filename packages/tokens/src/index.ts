@@ -14,8 +14,8 @@ export const colors = {
 } as const;
 
 export const fonts = {
-  heading: "'Instrument Serif', serif",
-  body: "'Jost', sans-serif",
+  heading: "'Cormorant Garamond', 'Instrument Serif', serif",
+  body: "'Manrope', 'Jost', sans-serif",
 } as const;
 
 export const fontWeight = {
@@ -36,10 +36,11 @@ export const spacing = {
 } as const;
 
 export const radius = {
-  card: "12px",
-  image: "16px",
+  // V3 G-01: square corners on cards/images. Pill kept for badges/buttons.
+  card: "0px",
+  image: "0px",
   pill: "500px",
-  button: "8px",
+  button: "0px",
 } as const;
 
 export const breakpoints = {

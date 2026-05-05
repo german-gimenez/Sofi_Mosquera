@@ -7,10 +7,13 @@ import { resolve } from "path";
 const ROOT = resolve(__dirname, "..");
 
 const TESTS = [
-  { name: "Structure audit", cmd: "tsx", args: ["scripts/audit-build.ts"] },
+  { name: "Structure audit (V3)", cmd: "tsx", args: ["scripts/audit-build.ts"] },
+  { name: "V3 fixes audit", cmd: "tsx", args: ["scripts/audit-v3-fixes.ts"] },
   { name: "Schema", cmd: "tsx", args: ["packages/db/src/schema.test.ts"] },
   { name: "Design tokens", cmd: "tsx", args: ["packages/tokens/src/tokens.test.ts"] },
   { name: "Cloudinary helper", cmd: "tsx", args: ["packages/ui/src/lib/cloudinary.test.ts"] },
+  { name: "i18n helpers", cmd: "tsx", args: ["apps/web/src/lib/i18n-helpers.test.ts"] },
+  { name: "Structured data", cmd: "tsx", args: ["apps/web/src/lib/structured-data.test.ts"] },
 ];
 
 async function runTest(test: (typeof TESTS)[number]): Promise<boolean> {

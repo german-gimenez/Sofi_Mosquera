@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
-import { cldUrl } from "@sofi/ui";
+import { useState } from "react";
+import { cldUrl, cn } from "@sofi/ui";
 
 export type LogoVariant =
   | "sm-dark"
@@ -24,11 +27,12 @@ interface LogoProps {
 }
 
 /**
- * Brand logo with multi-variant support.
+ * Brand logo with multi-variant support and graceful text fallback.
  *
  * Variants map to Cloudinary public_ids under sofi-mosquera/branding/.
- * Falls back to a text "SM" placeholder if Cloudinary asset missing,
- * so headers/footers never break before assets are uploaded.
+ * If the Cloudinary asset 404s (or any image error), falls back to a styled
+ * "SM" or "Sofía Mosquera" text matching the variant tone, so headers/footers
+ * never break before assets are uploaded.
  */
 export function Logo({
   variant = "sm-dark",
@@ -38,17 +42,35 @@ export function Logo({
   priority = false,
   alt = "Sofía Mosquera Estudio",
 }: LogoProps) {
+  const [errored, setErrored] = useState(false);
   const publicId = LOGO_PUBLIC_IDS[variant];
   const isDark = variant.endsWith("-dark");
   const isWordmark = variant.startsWith("wordmark");
 
-  // Default sizes per variant if caller didn't specify
   const defaultW = isWordmark ? 220 : 48;
   const defaultH = isWordmark ? 32 : 48;
   const w = width ?? defaultW;
   const h = height ?? defaultH;
 
-  // Cloudinary URL with limit crop preserves aspect; png to keep transparency
+  if (errored) {
+    return (
+      <span
+        role="img"
+        aria-label={alt}
+        className={cn(
+          "inline-flex items-center justify-center font-heading select-none",
+          isDark ? "text-brand-negro" : "text-brand-blanco-calido",
+          className
+        )}
+        style={{ width: w, height: h, fontSize: isWordmark ? 18 : 24 }}
+        data-logo-variant={variant}
+        data-logo-fallback="true"
+      >
+        {isWordmark ? "Sofía Mosquera" : "SM"}
+      </span>
+    );
+  }
+
   const src = cldUrl(publicId, {
     w: w * 2,
     h: h * 2,
@@ -65,11 +87,10 @@ export function Logo({
       height={h}
       priority={priority}
       className={className}
-      // If the Cloudinary asset 404s, the broken-image will be invisible — handle via onError
-      // and we keep an aria-fallback text below
       style={{ maxWidth: "100%", height: "auto" }}
       data-logo-variant={variant}
       data-logo-tone={isDark ? "dark" : "light"}
+      onError={() => setErrored(true)}
     />
   );
 }

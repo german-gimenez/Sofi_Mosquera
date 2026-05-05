@@ -61,14 +61,16 @@ const proj = projectCreativeWorkSchema({
   location: "Mendoza",
   category: "residencial",
   coverImageUrl: "https://cdn/example.jpg",
+  locale: "es",
 });
 assert(proj["@type"] === "CreativeWork", '@type is CreativeWork');
 assert(proj.name === "Casa Susel", "name matches title");
 assert(
   typeof proj.url === "string" &&
-    (proj.url as string).includes("/proyectos/casa-susel"),
-  "url contains /proyectos/{slug}"
+    (proj.url as string).includes("/es/proyectos/casa-susel"),
+  "url contains /es/proyectos/{slug}"
 );
+assert(proj.inLanguage === "es-AR", "inLanguage is es-AR");
 assert(proj.dateCreated === "2021", "dateCreated is year string");
 assert(
   typeof proj.description === "string",
@@ -78,6 +80,18 @@ assert(
   JSON.stringify(proj).includes("Mendoza"),
   "location appears somewhere in schema"
 );
+
+console.log("\nprojectCreativeWorkSchema() — EN locale:");
+const projEn = projectCreativeWorkSchema({
+  title: "Susel House",
+  slug: "casa-susel",
+  locale: "en",
+});
+assert(
+  (projEn.url as string).includes("/en/projects/casa-susel"),
+  "EN locale uses /en/projects/{slug}"
+);
+assert(projEn.inLanguage === "en", "EN inLanguage is en");
 
 console.log("\nprojectCreativeWorkSchema() — partial data:");
 const projMin = projectCreativeWorkSchema({
@@ -100,13 +114,19 @@ const art = artworkVisualArtworkSchema({
   priceArs: 500000,
   status: "disponible",
   coverImageUrl: "https://cdn/mountains.jpg",
+  locale: "es",
 });
 assert(art["@type"] === "VisualArtwork", '@type is VisualArtwork');
 assert(art.name === "Mountains", "name matches title");
+assert(
+  (art.url as string).includes("/es/arte/mountains"),
+  "url contains /es/arte/{slug}"
+);
 assert(art.width === "80 cm", "width formatted as '80 cm'");
 assert(art.height === "100 cm", "height formatted as '100 cm'");
 const offers = art.offers as { price: string; availability: string };
 assert(offers?.price === "500000", "offer price is stringified");
+assert(offers?.priceCurrency === "ARS", "priceCurrency is ARS");
 assert(
   offers?.availability === "https://schema.org/InStock",
   "InStock when status disponible"
@@ -122,6 +142,28 @@ const soldOffers = soldArt.offers as { availability: string };
 assert(
   soldOffers?.availability === "https://schema.org/SoldOut",
   "SoldOut when status vendido"
+);
+
+const reservedArt = artworkVisualArtworkSchema({
+  title: "X",
+  slug: "x",
+  priceArs: 100000,
+  status: "reservado",
+});
+const reservedOffers = reservedArt.offers as { availability: string };
+assert(
+  reservedOffers?.availability === "https://schema.org/Reserved",
+  "Reserved when status reservado"
+);
+
+const artEn = artworkVisualArtworkSchema({
+  title: "Mountains",
+  slug: "mountains",
+  locale: "en",
+});
+assert(
+  (artEn.url as string).includes("/en/art/mountains"),
+  "EN locale uses /en/art/{slug}"
 );
 
 console.log("\njsonLdScript() safety:");

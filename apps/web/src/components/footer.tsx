@@ -31,7 +31,7 @@ export function Footer() {
           />
         </Link>
 
-        <p className="font-heading text-2xl md:text-3xl text-brand-negro mt-8 leading-tight">
+        <p className="font-heading font-medium text-2xl md:text-3xl text-brand-negro mt-8 leading-tight">
           {t("studio")}
         </p>
 
@@ -53,8 +53,8 @@ export function Footer() {
             </a>
           </div>
           <div>
-            <span className="font-body text-sm font-light text-brand-negro-suave">
-              Chacras de Coria, Mendoza
+            <span className="font-body text-sm font-light text-brand-negro-suave whitespace-pre-line">
+              {t("address")}
             </span>
           </div>
           <div>

@@ -38,17 +38,28 @@
   },
   "proyectos": {
     "title": "Projects",
+    "eyebrow": "Portfolio",
+    "intro": "Each project is born from a holistic vision: interior design, custom furniture and original art under the same gaze.",
     "back": "← Back to projects",
     "year": "Year",
     "location": "Location",
     "intervention": "Intervention",
     "concept": "Concept",
     "description": "Description",
-    "next": "Next project"
+    "next": "Next project",
+    "empty": "Coming soon — we're curating the portfolio.",
+    "area": "Area",
+    "highlights": "Highlights",
+    "beforeAfter": "Before / after",
+    "gallery": "Gallery",
+    "ctaTitle": "Want something like this?"
   },
   "estudio": {
     "title": "Studio",
     "team": "The team",
+    "body1": "SM Studio is a design studio led by Sofía Mosquera, integrating interior design, custom furniture and original art in a single creative process.",
+    "body2": "Unlike other studios, we believe a truly unique space cannot be designed in parts. The space, the furniture and the works that inhabit it are born from the same vision and the same hand. Nobody else does this.",
+    "body3": "The space where you live and work says something about you. When it doesn't represent you, you feel it. We create space experiences: we design the interior, build the furniture and create the artworks —all from the same vision.",
     "ctaProyectos": "Projects →",
     "ctaContacto": "Contact →"
   },
@@ -65,15 +76,29 @@
   },
   "muebles": {
     "title": "Furniture",
+    "eyebrow": "Custom furniture",
     "tagline": "Each piece is born from the space it will inhabit. Designed, built and installed by the studio.",
-    "comingSoon": "Catalogue of furniture available for sale coming soon.",
-    "consultCTA": "Inquire about a custom piece"
+    "comingSoon": "Coming soon to the catalogue",
+    "placeholder": "Meanwhile, we design and build custom furniture for each project. Reach out about your ideal piece.",
+    "consultCTA": "Inquire about a custom piece",
+    "personalizeTitle": "Can't find what you're looking for?",
+    "personalizeBody": "All our pieces can be adapted in dimensions, materials and finishes. Tell us what you need.",
+    "personalizeCTA": "Personalize this piece",
+    "back": "← View all furniture",
+    "priceFrom": "From",
+    "materials": "Materials",
+    "consultPiece": "Inquire about this piece",
+    "custom": "Custom-built",
+    "customBody": "Dimensions, woods and finishes can be adapted to your project. Production lead time 45-60 days.",
+    "otherPieces": "Other pieces"
   },
   "arte": {
     "title": "Art",
+    "eyebrow": "Gallery",
     "intro": "Art as a path to decipher the interior. Four series where each canvas is a radiography of the present —emotions, maps, movement and solidity— captured in color and matter.",
     "series": "Series",
     "obras": "works",
+    "availableCount": "available",
     "available": "Available",
     "reserved": "Reserved",
     "sold": "Sold",
@@ -84,10 +109,13 @@
     "sortRecent": "Recent",
     "sortPriceAsc": "Price: low to high",
     "sortPriceDesc": "Price: high to low",
-    "back": "← Back",
+    "back": "← Back to gallery",
+    "empty": "Coming soon — we're curating the gallery.",
+    "otherWorks": "Other works",
+    "inSpace": "work in space",
     "details": {
       "certificate": "Certificate of authenticity",
-      "shipping": "Shipping in Argentina and international",
+      "shipping": "Shipping",
       "payment": "Payment methods",
       "delivery": "Delivery time",
       "technique": "Technique",
@@ -95,7 +123,19 @@
       "year": "Year",
       "serie": "Series"
     },
-    "otrasObras": "Other works in the series"
+    "certificateBody": "Every piece includes a certificate signed by the artist.",
+    "shippingBody": "Argentina and international, insured and professionally packed.",
+    "paymentBody": "Wire transfer, MEP dollar, instalments or trades.",
+    "otrasObras": "Other works"
+  },
+  "artCommerce": {
+    "available": "Available",
+    "reserved": "Reserved",
+    "sold": "Sold",
+    "inquire": "Inquire",
+    "from": "From",
+    "newSeries": "New series",
+    "limited": "Limited edition"
   },
   "contacto": {
     "title": "Contact",
@@ -106,6 +146,7 @@
     "phone": "Phone",
     "instagram": "Instagram",
     "openMaps": "Open in Google Maps →",
+    "mapLabel": "Studio location on Google Maps",
     "form": {
       "name": "Name",
       "email": "Email",
@@ -119,6 +160,7 @@
   },
   "footer": {
     "studio": "Sofía Mosquera Studio",
+    "address": "Besares 271B, Chacras de Coria\nLuján de Cuyo, Mendoza",
     "rights": "All rights reserved.",
     "tagline": "We don't decorate. We inhabit."
   },
@@ -128,7 +170,7 @@
   },
   "meta": {
     "siteTitle": "Sofía Mosquera — Interior Design · Art · Custom Furniture",
-    "siteDescription": "Studio of interior design, original art and custom furniture in Mendoza and Santiago. Portfolio of projects integrating design, art and unique pieces."
+    "siteDescription": "Studio of interior design, original art and custom furniture in Mendoza. Portfolio of projects integrating design, art and unique pieces."
   },
   "languageSwitcher": {
     "es": "ES",

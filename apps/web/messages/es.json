@@ -38,17 +38,28 @@
   },
   "proyectos": {
     "title": "Proyectos",
+    "eyebrow": "Portfolio",
+    "intro": "Cada proyecto nace de una visión integral: interiorismo, muebles a medida y arte original bajo una misma mirada.",
     "back": "← Volver a proyectos",
     "year": "Año",
     "location": "Ubicación",
     "intervention": "Intervención",
     "concept": "Concepto",
     "description": "Descripción",
-    "next": "Siguiente proyecto"
+    "next": "Siguiente proyecto",
+    "empty": "Próximamente — estamos preparando el portfolio.",
+    "area": "Superficie",
+    "highlights": "Destacados",
+    "beforeAfter": "Antes / después",
+    "gallery": "Galería",
+    "ctaTitle": "¿Querés algo así?"
   },
   "estudio": {
     "title": "Estudio",
     "team": "El equipo",
+    "body1": "SM Studio es un estudio de diseño dirigido por Sofía Mosquera, que integra interiorismo, muebles a medida y arte original en un único proceso creativo.",
+    "body2": "A diferencia de otros estudios, creemos que un espacio verdaderamente único no puede diseñarse por partes. El espacio, los muebles y las obras que lo habitan nacen de la misma visión y de la misma mano. Eso no lo hace nadie más.",
+    "body3": "El espacio donde vivís y trabajás dice algo sobre vos. Cuando no te representa, lo sentís. Creamos experiencias de espacio: diseñamos el interiorismo, fabricamos los muebles y creamos las obras de arte —todo desde la misma visión.",
     "ctaProyectos": "Proyectos →",
     "ctaContacto": "Contacto →"
   },
@@ -65,15 +76,29 @@
   },
   "muebles": {
     "title": "Muebles",
+    "eyebrow": "Mueble a medida",
     "tagline": "Cada pieza nace del espacio que va a habitar. Diseñada, fabricada e instalada por el estudio.",
-    "comingSoon": "Próximamente catálogo de muebles disponibles para venta.",
-    "consultCTA": "Consultá un mueble a medida"
+    "comingSoon": "Próximamente en el catálogo",
+    "placeholder": "Mientras tanto, diseñamos y fabricamos muebles a medida para cada proyecto. Consultanos por tu pieza ideal.",
+    "consultCTA": "Consultá un mueble a medida",
+    "personalizeTitle": "¿No encontrás lo que buscás?",
+    "personalizeBody": "Todas nuestras piezas se pueden adaptar en dimensiones, materiales y terminaciones. Contanos qué necesitás.",
+    "personalizeCTA": "Personalizá esta pieza",
+    "back": "← Ver todos los muebles",
+    "priceFrom": "Desde",
+    "materials": "Materiales",
+    "consultPiece": "Consultá por esta pieza",
+    "custom": "A medida",
+    "customBody": "Dimensiones, maderas y terminaciones se pueden adaptar según el proyecto. Tiempos de fabricación 45-60 días.",
+    "otherPieces": "Otras piezas"
   },
   "arte": {
     "title": "Arte",
+    "eyebrow": "Galería",
     "intro": "El arte como camino para descifrar el interior. Cuatro series donde cada lienzo es una radiografía del presente —emociones, mapas, movimiento y solidez— plasmada en color y materia.",
-    "series": "Series",
+    "series": "Serie",
     "obras": "obras",
+    "availableCount": "disponibles",
     "available": "Disponible",
     "reserved": "Reservado",
     "sold": "Vendido",
@@ -84,10 +109,13 @@
     "sortRecent": "Recientes",
     "sortPriceAsc": "Precio: menor a mayor",
     "sortPriceDesc": "Precio: mayor a menor",
-    "back": "← Volver",
+    "back": "← Volver a la galería",
+    "empty": "Próximamente — estamos preparando la galería.",
+    "otherWorks": "Otras obras",
+    "inSpace": "obra en espacio",
     "details": {
       "certificate": "Certificado de autenticidad",
-      "shipping": "Envío Argentina e internacional",
+      "shipping": "Envío",
       "payment": "Formas de pago",
       "delivery": "Tiempo de entrega",
       "technique": "Técnica",
@@ -95,7 +123,19 @@
       "year": "Año",
       "serie": "Serie"
     },
-    "otrasObras": "Otras obras de la serie"
+    "certificateBody": "Cada obra incluye certificado firmado por la artista.",
+    "shippingBody": "Argentina e internacional con seguro y embalaje técnico.",
+    "paymentBody": "Transferencia, dólar MEP, cuotas o intercambios.",
+    "otrasObras": "Otras obras"
+  },
+  "artCommerce": {
+    "available": "Disponible",
+    "reserved": "Reservado",
+    "sold": "Vendido",
+    "inquire": "Consultar",
+    "from": "Desde",
+    "newSeries": "Nueva serie",
+    "limited": "Edición limitada"
   },
   "contacto": {
     "title": "Contacto",
@@ -106,6 +146,7 @@
     "phone": "Teléfono",
     "instagram": "Instagram",
     "openMaps": "Abrir en Google Maps →",
+    "mapLabel": "Ubicación del estudio en Google Maps",
     "form": {
       "name": "Nombre",
       "email": "Email",
@@ -119,6 +160,7 @@
   },
   "footer": {
     "studio": "Sofía Mosquera Estudio",
+    "address": "Besares 271B, Chacras de Coria\nLuján de Cuyo, Mendoza",
     "rights": "Todos los derechos reservados.",
     "tagline": "No decoramos. Habitamos."
   },
@@ -128,7 +170,7 @@
   },
   "meta": {
     "siteTitle": "Sofía Mosquera — Interiorismo · Arte · Muebles a medida",
-    "siteDescription": "Estudio de interiorismo, arte original y muebles a medida en Mendoza y Santiago. Portfolio de proyectos que integran diseño, arte y piezas únicas."
+    "siteDescription": "Estudio de interiorismo, arte original y muebles a medida en Mendoza. Portfolio de proyectos que integran diseño, arte y piezas únicas."
   },
   "languageSwitcher": {
     "es": "ES",
