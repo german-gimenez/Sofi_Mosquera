@@ -17,36 +17,39 @@ config({ path: resolve(__dirname, "../.env.local") });
 
 // Map furniture slug -> [cover, ...gallery] Cloudinary public_ids
 // Pulled from existing uploaded project galleries.
+// Paths updated to match current Cloudinary structure (_archive/ prefix).
+// These are project photos used contextually — the furniture was designed
+// / produced for these projects.
 const MAP: Record<string, string[]> = {
   "mesa-comedor-roble": [
-    "sofi-mosquera/projects/bertona-ferreyra/03",
-    "sofi-mosquera/projects/bertona-ferreyra/05",
-    "sofi-mosquera/projects/penthouse/04",
+    "sofi-mosquera/_archive/projects/bertona-ferreyra/03",
+    "sofi-mosquera/_archive/projects/bertona-ferreyra/05",
+    "sofi-mosquera/_archive/projects/penthouse/04",
   ],
   "mueble-bajo-living": [
-    "sofi-mosquera/projects/rosario-gonzalez/02",
-    "sofi-mosquera/projects/casa-susel/05",
-    "sofi-mosquera/projects/penthouse/06",
+    "sofi-mosquera/_archive/projects/rosario-gonzalez/02",
+    "sofi-mosquera/_archive/projects/casa-susel/05",
+    "sofi-mosquera/_archive/projects/penthouse/06",
   ],
   "biblioteca-flotante": [
-    "sofi-mosquera/projects/penthouse/03",
-    "sofi-mosquera/projects/penthouse/05",
-    "sofi-mosquera/projects/bertona-ferreyra/07",
+    "sofi-mosquera/_archive/projects/penthouse/03",
+    "sofi-mosquera/_archive/projects/penthouse/05",
+    "sofi-mosquera/_archive/projects/bertona-ferreyra/07",
   ],
   "banco-madera-cuero": [
-    "sofi-mosquera/projects/rosario-gonzalez/04",
-    "sofi-mosquera/projects/casa-susel/03",
-    "sofi-mosquera/projects/andeluna/05",
+    "sofi-mosquera/_archive/projects/rosario-gonzalez/04",
+    "sofi-mosquera/_archive/projects/casa-susel/03",
+    "sofi-mosquera/_archive/projects/andeluna/05",
   ],
   "mesa-ratona-piedra": [
-    "sofi-mosquera/projects/casa-susel/06",
-    "sofi-mosquera/projects/bertona-ferreyra/04",
-    "sofi-mosquera/projects/penthouse/07",
+    "sofi-mosquera/_archive/projects/casa-susel/06",
+    "sofi-mosquera/_archive/projects/bertona-ferreyra/04",
+    "sofi-mosquera/_archive/projects/penthouse/07",
   ],
   "mueble-estar": [
-    "sofi-mosquera/projects/casa-susel/02",
-    "sofi-mosquera/projects/rosario-gonzalez/06",
-    "sofi-mosquera/projects/andeluna/03",
+    "sofi-mosquera/_archive/projects/casa-susel/02",
+    "sofi-mosquera/_archive/projects/rosario-gonzalez/06",
+    "sofi-mosquera/_archive/projects/andeluna/03",
   ],
 };
 

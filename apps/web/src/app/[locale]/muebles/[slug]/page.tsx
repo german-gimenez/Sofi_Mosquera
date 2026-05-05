@@ -18,6 +18,7 @@ import {
   furnitureMessage,
   cldGallery,
   cldCard,
+  cldSrcSet,
 } from "@sofi/ui";
 import { pickLocale, formatPriceArs } from "@/lib/i18n-helpers";
 import type { Locale } from "@/i18n/routing";
@@ -58,7 +59,6 @@ export default async function FurniturePage({ params }: Props) {
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "muebles" });
-  const tArte = await getTranslations({ locale, namespace: "arte" });
   const lc = locale as Locale;
 
   const db = createDb();
@@ -108,10 +108,17 @@ export default async function FurniturePage({ params }: Props) {
             {piece.coverUrl ? (
               <img
                 src={cldGallery(piece.coverUrl)}
+                srcSet={cldSrcSet(piece.coverUrl, [600, 900, 1200, 1600], {
+                  h: 1200,
+                  crop: "fill",
+                  g: "auto",
+                })}
+                sizes="(max-width: 768px) 100vw, 50vw"
                 alt={title}
                 className="w-full h-full object-cover"
                 loading="eager"
                 fetchPriority="high"
+                decoding="async"
               />
             ) : (
               <div
@@ -160,7 +167,7 @@ export default async function FurniturePage({ params }: Props) {
               {piece.dimensions && (
                 <div className="flex justify-between gap-4 py-3">
                   <dt className="font-body text-[9px] tracking-[0.25em] uppercase text-brand-gris-nav">
-                    {tArte("details.dimensions")}
+                    {t("dimensions")}
                   </dt>
                   <dd className="font-body text-sm text-right">
                     {piece.dimensions}
@@ -191,14 +198,21 @@ export default async function FurniturePage({ params }: Props) {
           <div className="mt-16 grid grid-cols-2 gap-4">
             {gallery.map((publicId, i) => (
               <div
-                key={i}
+                key={publicId}
                 className="aspect-[4/3] bg-brand-crema overflow-hidden"
               >
                 <img
                   src={cldGallery(publicId)}
+                  srcSet={cldSrcSet(publicId, [400, 800, 1200], {
+                    h: 900,
+                    crop: "fill",
+                    g: "auto",
+                  })}
+                  sizes="(max-width: 768px) 50vw, 33vw"
                   alt={`${title} — ${i + 1}`}
                   className="w-full h-full object-cover"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
             ))}

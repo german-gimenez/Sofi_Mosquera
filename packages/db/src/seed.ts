@@ -444,12 +444,13 @@ async function seed() {
   `;
   console.log("     featured_series → emociones · about_photos · contact");
 
-  // 6. Sample furniture (placeholder; isCatalog=false until M-02)
-  console.log("\n[6/6] Furniture placeholder...");
+  // 6. Furniture — ensure existing pieces with covers are visible
+  console.log("\n[6/6] Furniture catalog gate...");
   await sql`
-    UPDATE furniture SET is_catalog = false WHERE is_catalog IS NULL OR is_catalog = false
+    UPDATE furniture SET is_catalog = true, updated_at = NOW()
+    WHERE cover_url IS NOT NULL AND is_catalog = false
   `;
-  console.log("     Furniture is_catalog gates pieces from public catalogue");
+  console.log("     Activated furniture pieces with cover images");
 
   console.log("\n✅ V3 Seed completed!");
 }

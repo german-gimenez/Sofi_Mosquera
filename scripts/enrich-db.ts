@@ -82,6 +82,7 @@ async function enrichFurniture() {
       dimensions: "220 x 100 x 75 cm (modificable)",
       priceArs: 980000,
       featured: true,
+      isCatalog: true,
     },
     {
       slug: "mueble-bajo-living",
@@ -91,6 +92,7 @@ async function enrichFurniture() {
       dimensions: "240 x 45 x 60 cm",
       priceArs: 850000,
       featured: true,
+      isCatalog: true,
     },
     {
       slug: "biblioteca-flotante",
@@ -100,6 +102,7 @@ async function enrichFurniture() {
       dimensions: "Configurable",
       priceArs: 720000,
       featured: false,
+      isCatalog: true,
     },
     {
       slug: "banco-madera-cuero",
@@ -109,6 +112,7 @@ async function enrichFurniture() {
       dimensions: "140 x 40 x 45 cm",
       priceArs: 420000,
       featured: false,
+      isCatalog: true,
     },
     {
       slug: "mesa-ratona-piedra",
@@ -118,12 +122,23 @@ async function enrichFurniture() {
       dimensions: "120 x 70 x 38 cm",
       priceArs: 580000,
       featured: false,
+      isCatalog: true,
+    },
+    {
+      slug: "mueble-estar",
+      title: "Mueble de Estar",
+      description: "Mueble de estar diseñado a medida para integrar almacenamiento y estética en el living. Líneas limpias y materiales nobles.",
+      materials: "Madera natural, herrajes de diseño",
+      dimensions: "200 x 50 x 65 cm",
+      priceArs: 780000,
+      featured: true,
+      isCatalog: true,
     },
   ];
 
   for (const f of newFurniture) {
-    await sql`INSERT INTO furniture (slug, title, description, materials, dimensions, price_ars, featured, published_at, created_at, updated_at)
-      VALUES (${f.slug}, ${f.title}, ${f.description}, ${f.materials}, ${f.dimensions}, ${f.priceArs}, ${f.featured}, NOW(), NOW(), NOW())
+    await sql`INSERT INTO furniture (slug, title, description, materials, dimensions, price_ars, featured, is_catalog, published_at, created_at, updated_at)
+      VALUES (${f.slug}, ${f.title}, ${f.description}, ${f.materials}, ${f.dimensions}, ${f.priceArs}, ${f.featured}, ${f.isCatalog}, NOW(), NOW(), NOW())
       ON CONFLICT (slug) DO NOTHING`;
     console.log(`  +added ${f.slug}`);
   }
