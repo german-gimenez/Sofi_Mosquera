@@ -23,3 +23,41 @@
 - Los tres agentes editan el mismo árbol. Hacé commits chicos y bien etiquetados.
 - Si dejás WIP, anotalo en `docs/STATE.md`.
 - Las cursor rules en `.cursor/rules/*.mdc` están listadas en `opencode.json > instructions`, así que OpenCode las respeta también.
+
+## Cloudflare API (acceso disponible para OpenCode)
+
+NapsixAI tiene un token de Cloudflare con scope account, expuesto como env var del usuario en Windows. OpenCode lo hereda automaticamente al iniciar sesion.
+
+- `CLOUDFLARE_API_TOKEN` — token (account-scoped)
+- `CLOUDFLARE_ACCOUNT_ID` — id de la cuenta `NapsixAI Account`
+
+**Permisos verificados (2026-05-19):**
+
+| Recurso | Acceso |
+|---------|--------|
+| 12 zonas DNS | Read/Edit/Delete records (`asea.com.ar`, `asea.org.ar`, `komuny.org`, `muscleworld.com.ar`, `napsix.ai`, `napsix.chat`, `napsix.com`, `napsix.one`, `padel365.app`, `suplement.app`, `vlozity.com`, `welocal.tur.ar`) |
+| Workers | Read/Edit |
+| Pages | Read/Edit |
+| R2 | Read/Edit |
+| KV | Read/Edit |
+| D1 | Read/Edit |
+| Zone settings | Read |
+
+**Ejemplo de uso desde PowerShell:**
+
+```powershell
+$h = @{ Authorization = "Bearer $env:CLOUDFLARE_API_TOKEN" }
+# Listar zonas
+Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones?account.id=$env:CLOUDFLARE_ACCOUNT_ID&per_page=50" -Headers $h
+# Listar DNS de una zona
+Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones/<zone_id>/dns_records?per_page=100" -Headers $h
+```
+
+`wrangler` tambien hereda el token (Workers/Pages/D1 funcionan automaticamente).
+
+**Reglas:**
+
+- Nunca commitear el token (vive en env var del usuario, no en `.env`).
+- El token NO verifica con `/user/tokens/verify` (account-scoped, sin user:read). Es esperado.
+- Para limpiar/auditar DNS u operaciones destructivas, siempre re-listar antes del DELETE y confirmar con el usuario.
+- El token tambien tiene acceso a la zona del repo actual si esta entre las 12 listadas arriba — usar siempre el nombre exacto del dominio al filtrar.
