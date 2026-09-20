@@ -276,3 +276,37 @@ Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones/<zone_id>/dns
 - El token NO verifica con `/user/tokens/verify` (account-scoped, sin user:read). Es esperado.
 - Para limpiar/auditar DNS u operaciones destructivas, siempre re-listar antes del DELETE y confirmar con el usuario.
 - El token tambien tiene acceso a la zona del repo actual si esta entre las 12 listadas arriba — usar siempre el nombre exacto del dominio al filtrar.
+
+
+---
+
+## ClickUp — Comentarios con emojis en Windows
+
+> **Regla crítica:** Usar `System.Net.Http.HttpClient` de .NET, **nunca** `Invoke-WebRequest` ni `Invoke-RestMethod` de PowerShell 5.1.
+
+La clave fue usar `System.Net.Http.HttpClient` de .NET en vez de `Invoke-WebRequest`/`Invoke-RestMethod` de PowerShell 5.1 — estos últimos re-codifican el body con el encoding del sistema (Windows-1252) y los emojis se pierden.
+
+```powershell
+# ✅ Correcto — preserva UTF-8, los emojis llegan bien a ClickUp
+$token  = $env:CLICKUP_API_TOKEN
+$taskId = "abc123xyz"
+$url    = "https://api.clickup.com/api/v2/task/$taskId/comment"
+$body   = @{ comment_text = "✅ Deploy exitoso 🚀 todo OK" } | ConvertTo-Json -Compress
+
+$client  = [System.Net.Http.HttpClient]::new()
+$client.DefaultRequestHeaders.Add("Authorization", $token)
+$content = [System.Net.Http.StringContent]::new(
+    $body,
+    [System.Text.Encoding]::UTF8,
+    "application/json"
+)
+$response = $client.PostAsync($url, $content).Result
+$response.Content.ReadAsStringAsync().Result
+```
+
+```powershell
+# ❌ Evitar — re-codifica body a Windows-1252, emojis se pierden o corrompen
+Invoke-RestMethod -Uri $url -Method POST `
+    -Headers @{ Authorization = $token } `
+    -Body $body -ContentType "application/json"
+```
